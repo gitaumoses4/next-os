@@ -2,17 +2,44 @@
 
 import { OSShell } from 'next-os'
 import type { AppDefinition } from 'next-os'
+import {
+  HiOutlineChartBarSquare,
+  HiOutlineChartPie,
+  HiOutlineEnvelope,
+  HiOutlineCalendarDays,
+  HiOutlineFolder,
+  HiOutlineDocumentText,
+  HiOutlineCog6Tooth,
+} from 'react-icons/hi2'
 
-function emojiIcon(emoji: string, bg: string): string {
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128"><rect width="128" height="128" rx="28" fill="${bg}"/><text x="64" y="76" font-size="64" text-anchor="middle" dominant-baseline="central">${emoji}</text></svg>`
-  return `data:image/svg+xml,${encodeURIComponent(svg)}`
+function Icon({ children, bg }: { children: React.ReactNode; bg: string }) {
+  return (
+    <div
+      style={{
+        width: '100%',
+        height: '100%',
+        borderRadius: '22%',
+        background: bg,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        color: '#fff',
+      }}
+    >
+      {children}
+    </div>
+  )
 }
 
 const apps: AppDefinition[] = [
   {
     id: 'dashboard',
     label: 'Dashboard',
-    icon: emojiIcon('📊', '#3b82f6'),
+    icon: (
+      <Icon bg="#3b82f6">
+        <HiOutlineChartBarSquare size="60%" />
+      </Icon>
+    ),
     route: '/dashboard',
     defaultSize: { w: 1000, h: 680 },
     instanceable: false,
@@ -20,7 +47,11 @@ const apps: AppDefinition[] = [
   {
     id: 'analytics',
     label: 'Analytics',
-    icon: emojiIcon('📈', '#8b5cf6'),
+    icon: (
+      <Icon bg="#8b5cf6">
+        <HiOutlineChartPie size="60%" />
+      </Icon>
+    ),
     route: '/analytics',
     defaultSize: { w: 960, h: 640 },
     instanceable: false,
@@ -28,7 +59,11 @@ const apps: AppDefinition[] = [
   {
     id: 'mail',
     label: 'Mail',
-    icon: emojiIcon('✉️', '#f43f5e'),
+    icon: (
+      <Icon bg="#f43f5e">
+        <HiOutlineEnvelope size="60%" />
+      </Icon>
+    ),
     route: '/mail',
     defaultSize: { w: 900, h: 600 },
     instanceable: false,
@@ -36,7 +71,11 @@ const apps: AppDefinition[] = [
   {
     id: 'calendar',
     label: 'Calendar',
-    icon: emojiIcon('📅', '#f59e0b'),
+    icon: (
+      <Icon bg="#f59e0b">
+        <HiOutlineCalendarDays size="60%" />
+      </Icon>
+    ),
     route: '/calendar',
     defaultSize: { w: 880, h: 640 },
     instanceable: false,
@@ -44,7 +83,11 @@ const apps: AppDefinition[] = [
   {
     id: 'files',
     label: 'Files',
-    icon: emojiIcon('📁', '#10b981'),
+    icon: (
+      <Icon bg="#10b981">
+        <HiOutlineFolder size="60%" />
+      </Icon>
+    ),
     route: '/files',
     defaultSize: { w: 800, h: 560 },
     instanceable: false,
@@ -52,7 +95,11 @@ const apps: AppDefinition[] = [
   {
     id: 'notes',
     label: 'Notes',
-    icon: emojiIcon('📝', '#06b6d4'),
+    icon: (
+      <Icon bg="#06b6d4">
+        <HiOutlineDocumentText size="60%" />
+      </Icon>
+    ),
     route: '/notes',
     defaultSize: { w: 640, h: 500 },
     instanceable: true,
@@ -60,7 +107,11 @@ const apps: AppDefinition[] = [
   {
     id: 'settings',
     label: 'Settings',
-    icon: emojiIcon('⚙️', '#6b7280'),
+    icon: (
+      <Icon bg="#6b7280">
+        <HiOutlineCog6Tooth size="60%" />
+      </Icon>
+    ),
     route: '/settings',
     defaultSize: { w: 720, h: 520 },
     resizable: false,

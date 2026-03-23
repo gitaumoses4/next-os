@@ -1,8 +1,9 @@
 'use client'
 
-import { useState, useCallback } from 'react'
+import { useCallback } from 'react'
 import { useOSStore } from '@/store/windowStore'
 import { useOSContext } from '@/context/OSContext'
+import { AppIcon } from '@/components/shared/AppIcon'
 import type { AppDefinition } from '@/types'
 
 interface DesktopIconProps {
@@ -37,17 +38,7 @@ export function DesktopIcon({ app, isSelected, onSelect }: DesktopIconProps) {
         width: iconSize + 32,
       }}
     >
-      <img
-        src={app.icon}
-        alt={app.label}
-        style={{
-          width: iconSize,
-          height: iconSize,
-          objectFit: 'contain',
-          pointerEvents: 'none',
-        }}
-        draggable={false}
-      />
+      <AppIcon icon={app.icon} size={iconSize} />
       <span
         style={{
           fontSize: 11,

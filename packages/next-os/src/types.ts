@@ -1,7 +1,7 @@
 export interface AppDefinition {
   id: string
   label: string
-  icon: string
+  icon: React.ReactNode
   route: string
   defaultSize: { w: number; h: number }
   defaultPosition?: { x: number; y: number }

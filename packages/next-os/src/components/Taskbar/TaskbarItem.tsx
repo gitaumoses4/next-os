@@ -3,6 +3,7 @@
 import { useCallback } from 'react'
 import { useOSStore } from '@/store/windowStore'
 import { useOSContext } from '@/context/OSContext'
+import { AppIcon } from '@/components/shared/AppIcon'
 import type { WindowState } from '@/store/windowStore'
 
 interface TaskbarItemProps {
@@ -43,14 +44,7 @@ export function TaskbarItem({ windowState }: TaskbarItemProps) {
         overflow: 'hidden',
       }}
     >
-      {app && (
-        <img
-          src={app.icon}
-          alt=""
-          style={{ width: 16, height: 16, objectFit: 'contain', flexShrink: 0 }}
-          draggable={false}
-        />
-      )}
+      {app && <AppIcon icon={app.icon} size={16} />}
       <span
         style={{
           overflow: 'hidden',

@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { motion, useAnimation } from 'framer-motion'
 import { useOSStore } from '@/store/windowStore'
 import { useOSContext } from '@/context/OSContext'
+import { AppIcon } from '@/components/shared/AppIcon'
 import type { AppDefinition } from '@/types'
 
 interface DockItemProps {
@@ -82,17 +83,7 @@ export function DockItem({ app }: DockItemProps) {
           transition: 'background 0.15s ease',
         }}
       >
-        <img
-          src={app.icon}
-          alt={app.label}
-          style={{
-            width: itemSize,
-            height: itemSize,
-            objectFit: 'contain',
-            borderRadius: itemSize * 0.2,
-          }}
-          draggable={false}
-        />
+        <AppIcon icon={app.icon} size={itemSize} borderRadius={itemSize * 0.2} />
         {hasWindow && (
           <div
             style={{
