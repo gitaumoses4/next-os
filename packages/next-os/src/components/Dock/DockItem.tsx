@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useRef } from 'react'
+import { forwardRef, useCallback, useEffect, useRef } from 'react'
 import { motion, useAnimation } from 'framer-motion'
 import { useOSStore } from '@/store/windowStore'
 import { useOSContext } from '@/context/OSContext'
@@ -8,12 +8,14 @@ import type { AppDefinition } from '@/types'
 
 interface DockItemProps {
   app: AppDefinition
-  mouseX: number | null
-  index: number
-  totalItems: number
+  scale: number
+  gap: number
 }
 
-export function DockItem({ app, mouseX, index, totalItems }: DockItemProps) {
+export const DockItem = forwardRef<HTMLButtonElement, DockItemProps>(function DockItem(
+  { app, scale, gap },
+  ref,
+) {
   const { theme, apps } = useOSContext()
   const windows = useOSStore((s) => s.windows)
   const openWindow = useOSStore((s) => s.openWindow)
@@ -62,21 +64,12 @@ export function DockItem({ app, mouseX, index, totalItems }: DockItemProps) {
     restoreWindow,
   ])
 
-  // Magnification: calculate scale based on mouse distance
-  const itemRef = useRef<HTMLButtonElement>(null)
-  let scale = 1
-  if (theme.dock.magnification && mouseX !== null && itemRef.current) {
-    const rect = itemRef.current.getBoundingClientRect()
-    const itemCenter = rect.left + rect.width / 2
-    const distance = Math.abs(mouseX - itemCenter)
-    const maxScale = 1.5
-    const radius = theme.dock.itemSize * 3
-    scale = 1 + Math.max(0, (maxScale - 1) * (1 - distance / radius))
-  }
+  const { itemSize } = theme.dock
+  const scaledSize = itemSize * scale
 
   return (
     <motion.button
-      ref={itemRef}
+      ref={ref}
       onClick={onClick}
       animate={bounceControls}
       title={app.label}
@@ -85,24 +78,24 @@ export function DockItem({ app, mouseX, index, totalItems }: DockItemProps) {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
+        justifyContent: 'flex-end',
         gap: 2,
         background: 'none',
         border: 'none',
         cursor: 'pointer',
-        padding: 0,
-        transformOrigin: 'bottom center',
+        padding: `0 ${gap / 2}px`,
+        width: scaledSize + gap,
+        transition: 'width 0.15s ease',
       }}
     >
       <motion.img
         src={app.icon}
         alt={app.label}
-        animate={{ scale }}
-        transition={{ type: 'spring', stiffness: 300, damping: 20 }}
         style={{
-          width: theme.dock.itemSize,
-          height: theme.dock.itemSize,
+          width: scaledSize,
+          height: scaledSize,
           objectFit: 'contain',
-          borderRadius: theme.dock.itemSize * 0.2,
+          borderRadius: scaledSize * 0.2,
           transformOrigin: 'bottom center',
         }}
         draggable={false}
@@ -119,4 +112,4 @@ export function DockItem({ app, mouseX, index, totalItems }: DockItemProps) {
       )}
     </motion.button>
   )
-}
+})
