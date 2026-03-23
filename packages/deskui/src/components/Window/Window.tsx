@@ -15,6 +15,7 @@ export function Window({ windowId }: WindowProps) {
   const { theme, apps } = useOSContext()
   const win = useOSStore((s) => s.windows[windowId])
   const focusWindow = useOSStore((s) => s.focusWindow)
+  const isDragging = useOSStore((s) => s.draggingWindowId === windowId)
 
   if (!win) return null
 
@@ -46,13 +47,22 @@ export function Window({ windowId }: WindowProps) {
         borderRadius: isMaximized ? 0 : parseInt(windowChrome.borderRadius) || 12,
       }}
       exit="exit"
-      transition={{
-        left: { type: 'tween', duration: 0.2, ease: [0.2, 0.8, 0.2, 1] },
-        top: { type: 'tween', duration: 0.2, ease: [0.2, 0.8, 0.2, 1] },
-        width: { type: 'tween', duration: 0.2, ease: [0.2, 0.8, 0.2, 1] },
-        height: { type: 'tween', duration: 0.2, ease: [0.2, 0.8, 0.2, 1] },
-        borderRadius: { type: 'tween', duration: 0.2 },
-      }}
+      transition={
+        isDragging
+          ? {
+              left: { duration: 0 },
+              top: { duration: 0 },
+              width: { duration: 0 },
+              height: { duration: 0 },
+            }
+          : {
+              left: { type: 'tween', duration: 0.2, ease: [0.2, 0.8, 0.2, 1] },
+              top: { type: 'tween', duration: 0.2, ease: [0.2, 0.8, 0.2, 1] },
+              width: { type: 'tween', duration: 0.2, ease: [0.2, 0.8, 0.2, 1] },
+              height: { type: 'tween', duration: 0.2, ease: [0.2, 0.8, 0.2, 1] },
+              borderRadius: { type: 'tween', duration: 0.2 },
+            }
+      }
       onPointerDown={() => focusWindow(windowId)}
       style={{
         position: 'absolute',

@@ -22,6 +22,8 @@ export interface OSStore {
   windows: Record<string, WindowState>
   zStack: string[]
   showDesktopSnapshot: string[] | null
+  draggingWindowId: string | null
+  setDragging: (windowId: string | null) => void
 
   openWindow: (appId: string, apps: AppDefinition[]) => string | null
   closeWindow: (windowId: string) => void
@@ -65,6 +67,8 @@ export const useOSStore = create<OSStore>((set, get) => ({
   windows: {},
   zStack: [],
   showDesktopSnapshot: null,
+  draggingWindowId: null,
+  setDragging: (windowId) => set({ draggingWindowId: windowId }),
 
   openWindow: (appId, apps) => {
     const app = apps.find((a) => a.id === appId)
