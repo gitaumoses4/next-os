@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo } from 'react'
+import { useMemo, useState, useEffect } from 'react'
 import type { AppDefinition, DeepPartial } from '@/types'
 import type { OSTheme } from '@/themes/types'
 import { macosTheme } from '@/themes/macos'
@@ -10,6 +10,7 @@ import { OSProvider } from '@/context/OSProvider'
 import { WindowManager } from '@/components/WindowManager'
 import { Desktop } from '@/components/Desktop'
 import { Dock } from '@/components/Dock'
+import { Taskbar } from '@/components/Taskbar'
 import '@/styles.css'
 
 const builtInThemes: Record<string, OSTheme> = {
@@ -66,8 +67,19 @@ export function OSShell({
   onWindowFocus,
   children,
 }: OSShellProps) {
+  const [isIframe, setIsIframe] = useState(false)
+
+  useEffect(() => {
+    setIsIframe(window.self !== window.top)
+  }, [])
+
   const theme = useMemo(() => resolveTheme(themeProp), [themeProp])
   const cssVars = useMemo(() => themeToVars(theme), [theme])
+
+  // Inside an iframe (window content) — render children only, no shell
+  if (isIframe) {
+    return <>{children}</>
+  }
 
   return (
     <div
@@ -91,7 +103,7 @@ export function OSShell({
       >
         <Desktop />
         <WindowManager />
-        {taskbarVariant === 'dock' && <Dock />}
+        {taskbarVariant === 'dock' ? <Dock /> : <Taskbar />}
         {children}
       </OSProvider>
     </div>
