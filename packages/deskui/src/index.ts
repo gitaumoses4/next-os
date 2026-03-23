@@ -27,6 +27,8 @@ export type { OSTheme } from './themes/types'
 
 // Themes
 export { macosTheme } from './themes/macos'
+export { windows11Theme } from './themes/windows11'
+export { ubuntuTheme } from './themes/ubuntu'
 
 // Utilities
 export { mergeTheme } from './utils/mergeTheme'

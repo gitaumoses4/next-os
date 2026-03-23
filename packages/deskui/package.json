@@ -1,8 +1,26 @@
 {
   "name": "deskui",
   "version": "0.1.0",
-  "description": "Give your Next.js app a desktop.",
+  "description": "A desktop OS shell for your web app — windows, dock, taskbar, and themes.",
   "license": "MIT",
+  "keywords": [
+    "desktop",
+    "os",
+    "window-manager",
+    "dock",
+    "taskbar",
+    "react",
+    "next.js",
+    "ui",
+    "shell"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gitaumoses4/deskui.git",
+    "directory": "packages/deskui"
+  },
+  "homepage": "https://github.com/gitaumoses4/deskui",
+  "bugs": "https://github.com/gitaumoses4/deskui/issues",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
