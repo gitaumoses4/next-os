@@ -126,7 +126,7 @@ export function OSShell({
     return (
       <>
         {children}
-        <ModeToggle mode={mode} onToggle={toggleMode} />
+        <ModeToggle mode={mode} onToggle={toggleMode} themeTokens={theme.modeToggle} />
       </>
     )
   }
@@ -155,7 +155,7 @@ export function OSShell({
         <Desktop />
         <WindowManager />
         {taskbarVariant === 'dock' ? <Dock /> : <Taskbar />}
-        <ModeToggle mode={mode} onToggle={toggleMode} />
+        <ModeToggle mode={mode} onToggle={toggleMode} themeTokens={theme.modeToggle} />
         <CommandPalette open={commandPaletteOpen} onClose={() => setCommandPaletteOpen(false)} />
         {children}
       </OSProvider>

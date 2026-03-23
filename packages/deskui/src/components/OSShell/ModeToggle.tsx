@@ -1,13 +1,15 @@
 'use client'
 
 import { useState } from 'react'
+import type { ModeToggleTheme } from '@/themes/types'
 
 interface ModeToggleProps {
   mode: 'desktop' | 'web'
   onToggle: () => void
+  themeTokens: ModeToggleTheme
 }
 
-export function ModeToggle({ mode, onToggle }: ModeToggleProps) {
+export function ModeToggle({ mode, onToggle, themeTokens: mt }: ModeToggleProps) {
   const [hovered, setHovered] = useState(false)
 
   const isDesktop = mode === 'desktop'
@@ -28,13 +30,13 @@ export function ModeToggle({ mode, onToggle }: ModeToggleProps) {
         display: 'flex',
         alignItems: 'center',
         gap: 6,
-        padding: hovered ? '8px 14px' : '8px 10px',
-        background: 'rgba(0, 0, 0, 0.7)',
-        backdropFilter: 'blur(12px)',
-        WebkitBackdropFilter: 'blur(12px)',
-        border: '1px solid rgba(255, 255, 255, 0.15)',
-        borderRadius: 20,
-        color: '#fff',
+        padding: hovered ? mt.hoverPadding : '8px 10px',
+        background: mt.bg,
+        backdropFilter: mt.blur,
+        WebkitBackdropFilter: mt.blur,
+        border: mt.border,
+        borderRadius: mt.borderRadius,
+        color: mt.color,
         fontSize: 13,
         cursor: 'pointer',
         transition: 'all 0.2s ease',

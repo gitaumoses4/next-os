@@ -16,6 +16,8 @@ export const defaultTheme: OSTheme = {
     border: '1px solid rgba(0, 0, 0, 0.06)',
     glassBg: 'rgba(255, 255, 255, 0.72)',
     glassBlur: 'blur(24px)',
+    contentBg: '#f8f8f8',
+    loadingSpinnerColor: '#999',
   },
 
   dock: {
@@ -27,8 +29,12 @@ export const defaultTheme: OSTheme = {
     blur: 'blur(24px)',
     borderRadius: '18px',
     padding: '6px 10px',
+    border: '1px solid rgba(255, 255, 255, 0.15)',
     magnification: false,
     runningIndicatorColor: 'rgba(255, 255, 255, 0.7)',
+    hoverBg: 'rgba(255, 255, 255, 0.15)',
+    tooltipBg: 'rgba(0, 0, 0, 0.75)',
+    tooltipColor: '#ffffff',
   },
 
   taskbar: {
@@ -47,6 +53,32 @@ export const defaultTheme: OSTheme = {
     iconSelectedBg: 'rgba(255, 255, 255, 0.15)',
     gridGap: 14,
     gridPadding: '24px',
+    defaultWallpaper: 'linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%)',
+  },
+
+  commandPalette: {
+    bg: 'rgba(30, 30, 30, 0.92)',
+    blur: 'blur(24px)',
+    border: '1px solid rgba(255, 255, 255, 0.1)',
+    shadow: '0 20px 60px rgba(0, 0, 0, 0.4)',
+    inputColor: '#ffffff',
+    inputPlaceholderColor: 'rgba(255, 255, 255, 0.4)',
+    itemHoverBg: 'rgba(255, 255, 255, 0.1)',
+    itemColor: '#ffffff',
+    itemBadgeColor: 'rgba(255, 255, 255, 0.3)',
+    separatorColor: 'rgba(255, 255, 255, 0.08)',
+    hintColor: 'rgba(255, 255, 255, 0.3)',
+    overlayBg: 'rgba(0, 0, 0, 0.3)',
+    borderRadius: '14px',
+  },
+
+  modeToggle: {
+    bg: 'rgba(0, 0, 0, 0.7)',
+    blur: 'blur(12px)',
+    border: '1px solid rgba(255, 255, 255, 0.15)',
+    color: '#ffffff',
+    hoverPadding: '8px 14px',
+    borderRadius: '20px',
   },
 
   animation: {

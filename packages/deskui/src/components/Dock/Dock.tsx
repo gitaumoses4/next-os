@@ -24,7 +24,7 @@ export function Dock() {
         backdropFilter: blur,
         WebkitBackdropFilter: blur,
         borderRadius,
-        border: '1px solid rgba(255, 255, 255, 0.15)',
+        border: theme.dock.border,
       }}
     >
       {apps.map((app) => (

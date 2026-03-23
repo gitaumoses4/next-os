@@ -20,16 +20,15 @@ interface CommandPaletteProps {
 }
 
 export function CommandPalette({ open, onClose }: CommandPaletteProps) {
-  const { apps } = useOSContext()
+  const { apps, theme } = useOSContext()
   const store = useOSStore()
   const [query, setQuery] = useState('')
   const [selectedIndex, setSelectedIndex] = useState(0)
   const inputRef = useRef<HTMLInputElement>(null)
+  const cp = theme.commandPalette
 
-  // Build command items
   const items: CommandItem[] = []
 
-  // Apps
   for (const app of apps) {
     items.push({
       id: `app-${app.id}`,
@@ -43,7 +42,6 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
     })
   }
 
-  // Open windows
   for (const win of Object.values(store.windows)) {
     const app = apps.find((a) => a.id === win.appId)
     items.push({
@@ -58,7 +56,6 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
     })
   }
 
-  // Actions
   items.push({
     id: 'action-show-desktop',
     label: 'Show Desktop',
@@ -83,12 +80,10 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
     },
   })
 
-  // Filter
   const filtered = query
     ? items.filter((item) => item.label.toLowerCase().includes(query.toLowerCase()))
     : items
 
-  // Reset selection when query or visibility changes
   useEffect(() => {
     setSelectedIndex(0)
   }, [query])
@@ -129,7 +124,6 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
     <AnimatePresence>
       {open && (
         <>
-          {/* Backdrop */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -139,12 +133,11 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
             style={{
               position: 'fixed',
               inset: 0,
-              background: 'rgba(0, 0, 0, 0.3)',
+              background: cp.overlayBg,
               zIndex: 9998,
             }}
           />
 
-          {/* Palette */}
           <motion.div
             initial={{ opacity: 0, scale: 0.95, y: -10 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -158,25 +151,19 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
               width: 520,
               maxHeight: 420,
               zIndex: 9999,
-              background: 'rgba(30, 30, 30, 0.92)',
-              backdropFilter: 'blur(24px)',
-              WebkitBackdropFilter: 'blur(24px)',
-              borderRadius: 14,
-              border: '1px solid rgba(255, 255, 255, 0.1)',
-              boxShadow: '0 20px 60px rgba(0, 0, 0, 0.4)',
+              background: cp.bg,
+              backdropFilter: cp.blur,
+              WebkitBackdropFilter: cp.blur,
+              borderRadius: cp.borderRadius,
+              border: cp.border,
+              boxShadow: cp.shadow,
               display: 'flex',
               flexDirection: 'column',
               overflow: 'hidden',
             }}
             onKeyDown={onKeyDown}
           >
-            {/* Search input */}
-            <div
-              style={{
-                padding: '14px 16px',
-                borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-              }}
-            >
+            <div style={{ padding: '14px 16px', borderBottom: `1px solid ${cp.separatorColor}` }}>
               <input
                 ref={inputRef}
                 value={query}
@@ -187,20 +174,19 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
                   background: 'transparent',
                   border: 'none',
                   outline: 'none',
-                  color: '#fff',
+                  color: cp.inputColor,
                   fontSize: 16,
                   fontFamily: 'inherit',
                 }}
               />
             </div>
 
-            {/* Results */}
             <div style={{ flex: 1, overflow: 'auto', padding: '6px 0' }}>
               {filtered.length === 0 && (
                 <div
                   style={{
                     padding: '20px 16px',
-                    color: 'rgba(255, 255, 255, 0.4)',
+                    color: cp.inputPlaceholderColor,
                     fontSize: 14,
                     textAlign: 'center',
                   }}
@@ -220,8 +206,8 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
                     width: '100%',
                     padding: '8px 16px',
                     border: 'none',
-                    background: i === selectedIndex ? 'rgba(255, 255, 255, 0.1)' : 'transparent',
-                    color: '#fff',
+                    background: i === selectedIndex ? cp.itemHoverBg : 'transparent',
+                    color: cp.itemColor,
                     fontSize: 14,
                     textAlign: 'left',
                     cursor: 'pointer',
@@ -237,11 +223,7 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
                   </div>
                   <span style={{ flex: 1 }}>{item.label}</span>
                   <span
-                    style={{
-                      fontSize: 11,
-                      color: 'rgba(255, 255, 255, 0.3)',
-                      textTransform: 'capitalize',
-                    }}
+                    style={{ fontSize: 11, color: cp.itemBadgeColor, textTransform: 'capitalize' }}
                   >
                     {item.type}
                   </span>
@@ -249,15 +231,14 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
               ))}
             </div>
 
-            {/* Footer hints */}
             <div
               style={{
                 padding: '8px 16px',
-                borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+                borderTop: `1px solid ${cp.separatorColor}`,
                 display: 'flex',
                 gap: 16,
                 fontSize: 11,
-                color: 'rgba(255, 255, 255, 0.3)',
+                color: cp.hintColor,
               }}
             >
               <span>↑↓ Navigate</span>

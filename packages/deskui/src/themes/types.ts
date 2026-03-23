@@ -13,6 +13,8 @@ export interface WindowChromeTheme {
   border: string
   glassBg: string
   glassBlur: string
+  contentBg: string
+  loadingSpinnerColor: string
 }
 
 export interface DockTheme {
@@ -24,8 +26,12 @@ export interface DockTheme {
   blur: string
   borderRadius: string
   padding: string
+  border: string
   magnification: boolean
   runningIndicatorColor: string
+  hoverBg: string
+  tooltipBg: string
+  tooltipColor: string
 }
 
 export interface TaskbarTheme {
@@ -44,6 +50,32 @@ export interface DesktopTheme {
   iconSelectedBg: string
   gridGap: number
   gridPadding: string
+  defaultWallpaper: string
+}
+
+export interface CommandPaletteTheme {
+  bg: string
+  blur: string
+  border: string
+  shadow: string
+  inputColor: string
+  inputPlaceholderColor: string
+  itemHoverBg: string
+  itemColor: string
+  itemBadgeColor: string
+  separatorColor: string
+  hintColor: string
+  overlayBg: string
+  borderRadius: string
+}
+
+export interface ModeToggleTheme {
+  bg: string
+  blur: string
+  border: string
+  color: string
+  hoverPadding: string
+  borderRadius: string
 }
 
 export interface AnimationTheme {
@@ -59,6 +91,8 @@ export interface OSTheme {
   dock: DockTheme
   taskbar: TaskbarTheme
   desktop: DesktopTheme
+  commandPalette: CommandPaletteTheme
+  modeToggle: ModeToggleTheme
   animation: AnimationTheme
   tokens: Record<string, string>
 }
