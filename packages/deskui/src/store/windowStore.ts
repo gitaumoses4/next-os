@@ -21,6 +21,7 @@ const BASE_Z = 100
 export interface OSStore {
   windows: Record<string, WindowState>
   zStack: string[]
+  showDesktopSnapshot: string[] | null
 
   openWindow: (appId: string, apps: AppDefinition[]) => string | null
   closeWindow: (windowId: string) => void
@@ -31,6 +32,7 @@ export interface OSStore {
   moveWindow: (windowId: string, position: { x: number; y: number }) => void
   resizeWindow: (windowId: string, size: { w: number; h: number }) => void
   blurAll: () => void
+  showDesktop: () => void
 }
 
 function deriveZIndexes(
@@ -57,9 +59,12 @@ function setFocused(
   return updated
 }
 
+const CASCADE_OFFSET = 30
+
 export const useOSStore = create<OSStore>((set, get) => ({
   windows: {},
   zStack: [],
+  showDesktopSnapshot: null,
 
   openWindow: (appId, apps) => {
     const app = apps.find((a) => a.id === appId)
@@ -77,9 +82,16 @@ export const useOSStore = create<OSStore>((set, get) => ({
     }
 
     const windowId = uuid()
-    const position = app.defaultPosition ?? {
+
+    // Cascade offset for instanceable apps
+    const sameAppCount = Object.values(state.windows).filter((w) => w.appId === appId).length
+    const basePosition = app.defaultPosition ?? {
       x: Math.round((window.innerWidth - app.defaultSize.w) / 2),
       y: Math.round((window.innerHeight - app.defaultSize.h) / 2),
+    }
+    const position = {
+      x: basePosition.x + sameAppCount * CASCADE_OFFSET,
+      y: basePosition.y + sameAppCount * CASCADE_OFFSET,
     }
 
     const newWindow: WindowState = {
@@ -229,5 +241,40 @@ export const useOSStore = create<OSStore>((set, get) => ({
 
   blurAll: () => {
     set({ windows: setFocused(get().windows, null) })
+  },
+
+  showDesktop: () => {
+    const state = get()
+
+    // If we have a snapshot, restore those windows
+    if (state.showDesktopSnapshot) {
+      const snapshot = state.showDesktopSnapshot
+      let windows = { ...state.windows }
+      for (const wid of snapshot) {
+        if (windows[wid]) {
+          windows[wid] = { ...windows[wid], status: 'open' as const }
+        }
+      }
+      const topId = snapshot.length > 0 ? snapshot[snapshot.length - 1] : null
+      windows = setFocused(windows, topId)
+      set({ windows, showDesktopSnapshot: null })
+      return
+    }
+
+    // Minimize all visible windows and save snapshot
+    const visibleIds = Object.values(state.windows)
+      .filter((w) => w.status !== 'minimized')
+      .map((w) => w.id)
+
+    if (visibleIds.length === 0) return
+
+    const windows: Record<string, WindowState> = {}
+    for (const [id, win] of Object.entries(state.windows)) {
+      windows[id] =
+        win.status !== 'minimized'
+          ? { ...win, status: 'minimized' as const, isFocused: false }
+          : win
+    }
+    set({ windows, showDesktopSnapshot: visibleIds })
   },
 }))

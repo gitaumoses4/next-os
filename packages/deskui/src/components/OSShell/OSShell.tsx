@@ -7,6 +7,7 @@ import { defaultTheme } from '@/themes/default'
 import { mergeTheme } from '@/utils/mergeTheme'
 import { themeToVars } from '@/utils/themeVars'
 import { OSProvider } from '@/context/OSProvider'
+import { useOSStore } from '@/store/windowStore'
 import { WindowManager } from '@/components/WindowManager'
 import { Desktop } from '@/components/Desktop'
 import { Dock } from '@/components/Dock'
@@ -82,16 +83,23 @@ export function OSShell({
   }, [onModeChange])
 
   // Keyboard shortcut: Ctrl/Cmd + Shift + D
+  const showDesktop = useOSStore((s) => s.showDesktop)
+
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'D') {
         e.preventDefault()
         toggleMode()
       }
+      // Cmd/Ctrl+D: show desktop (minimize/restore all)
+      if ((e.ctrlKey || e.metaKey) && !e.shiftKey && e.key === 'd') {
+        e.preventDefault()
+        showDesktop()
+      }
     }
     window.addEventListener('keydown', handler)
     return () => window.removeEventListener('keydown', handler)
-  }, [toggleMode])
+  }, [toggleMode, showDesktop])
 
   const theme = useMemo(() => resolveTheme(themeProp), [themeProp])
   const cssVars = useMemo(() => themeToVars(theme), [theme])
