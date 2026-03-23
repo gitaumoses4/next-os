@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { Providers } from './providers'
+import { OSLayout } from './os-layout'
 import './globals.css'
 
 export const metadata: Metadata = {
@@ -7,15 +8,13 @@ export const metadata: Metadata = {
   description: 'A demo SaaS app wrapped in next-os',
 }
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className="light">
       <body className="bg-background text-foreground antialiased">
-        <Providers>{children}</Providers>
+        <Providers>
+          <OSLayout>{children}</OSLayout>
+        </Providers>
       </body>
     </html>
   )

@@ -2,11 +2,7 @@
 
 import { useState } from 'react'
 import { Button, Input } from '@heroui/react'
-import {
-  HiOutlinePlus,
-  HiOutlineTrash,
-  HiOutlineMagnifyingGlass,
-} from 'react-icons/hi2'
+import { HiOutlinePlus, HiOutlineTrash, HiOutlineMagnifyingGlass } from 'react-icons/hi2'
 
 interface Note {
   id: number
@@ -52,7 +48,7 @@ export default function Notes() {
     ? notes.filter(
         (n) =>
           n.title.toLowerCase().includes(search.toLowerCase()) ||
-          n.body.toLowerCase().includes(search.toLowerCase())
+          n.body.toLowerCase().includes(search.toLowerCase()),
       )
     : notes
 
@@ -81,20 +77,12 @@ export default function Notes() {
             placeholder="Search notes..."
             value={search}
             onValueChange={setSearch}
-            startContent={
-              <HiOutlineMagnifyingGlass className="h-4 w-4 text-slate-400" />
-            }
+            startContent={<HiOutlineMagnifyingGlass className="h-4 w-4 text-slate-400" />}
             classNames={{
               inputWrapper: 'bg-white border border-slate-200 shadow-none',
             }}
           />
-          <Button
-            isIconOnly
-            size="sm"
-            variant="flat"
-            onPress={addNote}
-            className="shrink-0"
-          >
+          <Button isIconOnly size="sm" variant="flat" onPress={addNote} className="shrink-0">
             <HiOutlinePlus className="h-4 w-4" />
           </Button>
         </div>
@@ -108,9 +96,7 @@ export default function Notes() {
               }`}
             >
               <div className="flex items-start justify-between">
-                <span className="truncate text-sm font-semibold text-slate-800">
-                  {note.title}
-                </span>
+                <span className="truncate text-sm font-semibold text-slate-800">{note.title}</span>
                 <button
                   onClick={(e) => {
                     e.stopPropagation()
@@ -128,9 +114,7 @@ export default function Notes() {
             </button>
           ))}
           {filtered.length === 0 && (
-            <div className="p-4 text-center text-sm text-slate-400">
-              No notes found
-            </div>
+            <div className="p-4 text-center text-sm text-slate-400">No notes found</div>
           )}
         </div>
       </div>
@@ -143,9 +127,7 @@ export default function Notes() {
               value={current.title}
               onChange={(e) =>
                 setNotes((prev) =>
-                  prev.map((n) =>
-                    n.id === selected ? { ...n, title: e.target.value } : n
-                  )
+                  prev.map((n) => (n.id === selected ? { ...n, title: e.target.value } : n)),
                 )
               }
               className="border-b border-slate-200 px-6 py-4 text-xl font-bold text-slate-900 outline-none placeholder:text-slate-300"
@@ -155,9 +137,7 @@ export default function Notes() {
               value={current.body}
               onChange={(e) =>
                 setNotes((prev) =>
-                  prev.map((n) =>
-                    n.id === selected ? { ...n, body: e.target.value } : n
-                  )
+                  prev.map((n) => (n.id === selected ? { ...n, body: e.target.value } : n)),
                 )
               }
               className="flex-1 resize-none px-6 py-4 text-sm leading-relaxed text-slate-700 outline-none placeholder:text-slate-300"

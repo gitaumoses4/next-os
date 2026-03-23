@@ -39,8 +39,18 @@ const upcomingEvents = [
 
 const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 const monthNames = [
-  'January', 'February', 'March', 'April', 'May', 'June',
-  'July', 'August', 'September', 'October', 'November', 'December',
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
 ]
 
 export default function Calendar() {
@@ -66,10 +76,7 @@ export default function Calendar() {
             {/* Day headers */}
             <div className="grid grid-cols-7 border-b border-slate-200">
               {dayNames.map((d) => (
-                <div
-                  key={d}
-                  className="py-2 text-center text-xs font-medium text-slate-500"
-                >
+                <div key={d} className="py-2 text-center text-xs font-medium text-slate-500">
                   {d}
                 </div>
               ))}
@@ -98,9 +105,7 @@ export default function Calendar() {
                   >
                     <span
                       className={`inline-flex h-6 w-6 items-center justify-center rounded-full text-xs ${
-                        isToday
-                          ? 'bg-primary font-bold text-white'
-                          : 'font-medium text-slate-700'
+                        isToday ? 'bg-primary font-bold text-white' : 'font-medium text-slate-700'
                       }`}
                     >
                       {day}
@@ -140,9 +145,7 @@ export default function Calendar() {
                 className={`${ev.color} shrink-0 text-[10px] text-white`}
               />
               <div>
-                <p className="text-sm font-medium text-slate-800">
-                  {ev.title}
-                </p>
+                <p className="text-sm font-medium text-slate-800">{ev.title}</p>
                 <p className="text-xs text-slate-400">{ev.time}</p>
               </div>
             </div>

@@ -1,15 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import {
-  Card,
-  CardBody,
-  Button,
-  Chip,
-  Progress,
-  Breadcrumbs,
-  BreadcrumbItem,
-} from '@heroui/react'
+import { Card, CardBody, Button, Chip, Progress, Breadcrumbs, BreadcrumbItem } from '@heroui/react'
 import {
   HiOutlineFolder,
   HiOutlineDocument,
@@ -76,7 +68,11 @@ export default function Files() {
           </Breadcrumbs>
         </div>
         <div className="flex items-center gap-2">
-          <Button size="sm" variant="bordered" startContent={<HiOutlineArrowUpTray className="h-4 w-4" />}>
+          <Button
+            size="sm"
+            variant="bordered"
+            startContent={<HiOutlineArrowUpTray className="h-4 w-4" />}
+          >
             Upload
           </Button>
           <div className="flex rounded-lg border border-slate-200">
@@ -104,16 +100,9 @@ export default function Files() {
       <Card className="mb-4 border border-slate-200 shadow-sm">
         <CardBody className="flex-row items-center gap-4 p-3">
           <div className="flex-1">
-            <Progress
-              size="sm"
-              value={68}
-              color="primary"
-              className="max-w-full"
-            />
+            <Progress size="sm" value={68} color="primary" className="max-w-full" />
           </div>
-          <span className="shrink-0 text-xs text-slate-500">
-            6.8 GB of 10 GB used
-          </span>
+          <span className="shrink-0 text-xs text-slate-500">6.8 GB of 10 GB used</span>
         </CardBody>
       </Card>
 
@@ -136,16 +125,12 @@ export default function Files() {
                 >
                   <div className="col-span-6 flex items-center gap-3">
                     <Icon className={`h-5 w-5 ${colorMap[file.type]}`} />
-                    <span className="truncate text-sm font-medium text-slate-800">
-                      {file.name}
-                    </span>
+                    <span className="truncate text-sm font-medium text-slate-800">{file.name}</span>
                   </div>
                   <div className="col-span-2 text-sm text-slate-500">
                     {file.size ?? `${file.items} items`}
                   </div>
-                  <div className="col-span-2 text-sm text-slate-500">
-                    {file.modified}
-                  </div>
+                  <div className="col-span-2 text-sm text-slate-500">{file.modified}</div>
                   <div className="col-span-2">
                     <Chip size="sm" variant="flat" className="capitalize">
                       {file.type}
@@ -161,11 +146,7 @@ export default function Files() {
           {files.map((file) => {
             const Icon = iconMap[file.type]
             return (
-              <Card
-                key={file.name}
-                isPressable
-                className="border border-slate-200 shadow-sm"
-              >
+              <Card key={file.name} isPressable className="border border-slate-200 shadow-sm">
                 <CardBody className="flex flex-col items-center gap-2 p-4">
                   <Icon className={`h-10 w-10 ${colorMap[file.type]}`} />
                   <span className="w-full truncate text-center text-sm font-medium text-slate-800">

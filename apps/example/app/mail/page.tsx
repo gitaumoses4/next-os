@@ -1,14 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import {
-  Card,
-  CardBody,
-  Avatar,
-  Chip,
-  Button,
-  Divider,
-} from '@heroui/react'
+import { Card, CardBody, Avatar, Chip, Button, Divider } from '@heroui/react'
 import {
   HiOutlineInbox,
   HiOutlinePaperAirplane,
@@ -33,8 +26,8 @@ const emails = [
     avatar: 'SC',
     subject: 'Q1 Product Roadmap Review',
     preview:
-      'Hey team, I\'ve attached the updated roadmap for Q1. Let me know your thoughts on the new priorities...',
-    body: 'Hey team,\n\nI\'ve attached the updated roadmap for Q1. Let me know your thoughts on the new priorities we discussed last Friday.\n\nKey changes:\n- Moved auth overhaul to P0\n- Added analytics dashboard to the sprint\n- Deferred mobile app to Q2\n\nPlease review and add comments by EOD Thursday.\n\nBest,\nSarah',
+      "Hey team, I've attached the updated roadmap for Q1. Let me know your thoughts on the new priorities...",
+    body: "Hey team,\n\nI've attached the updated roadmap for Q1. Let me know your thoughts on the new priorities we discussed last Friday.\n\nKey changes:\n- Moved auth overhaul to P0\n- Added analytics dashboard to the sprint\n- Deferred mobile app to Q2\n\nPlease review and add comments by EOD Thursday.\n\nBest,\nSarah",
     time: '10:32 AM',
     unread: true,
     starred: true,
@@ -45,8 +38,8 @@ const emails = [
     avatar: 'AR',
     subject: 'Re: Design system tokens',
     preview:
-      'Looks great! I\'ve pushed the updated color scale to the Figma library. The spacing tokens...',
-    body: 'Looks great! I\'ve pushed the updated color scale to the Figma library.\n\nThe spacing tokens are aligned with the 4px grid now. Let me know if you want me to adjust the border radius values as well.\n\nAlso, should we schedule a sync with the front-end team to go over the migration path?\n\n—Alex',
+      "Looks great! I've pushed the updated color scale to the Figma library. The spacing tokens...",
+    body: "Looks great! I've pushed the updated color scale to the Figma library.\n\nThe spacing tokens are aligned with the 4px grid now. Let me know if you want me to adjust the border radius values as well.\n\nAlso, should we schedule a sync with the front-end team to go over the migration path?\n\n—Alex",
     time: '9:15 AM',
     unread: true,
     starred: false,
@@ -67,9 +60,8 @@ const emails = [
     from: 'Jordan Lee',
     avatar: 'JL',
     subject: 'Team offsite planning',
-    preview:
-      'I\'ve booked the venue for March 15-16. Here\'s the agenda draft for the two days...',
-    body: 'I\'ve booked the venue for March 15-16.\n\nDay 1 — Strategy\n- 9:00 AM: Kickoff & retrospective\n- 11:00 AM: Product vision workshop\n- 2:00 PM: Technical architecture review\n\nDay 2 — Team Building\n- 10:00 AM: Escape room\n- 1:00 PM: Lunch at Chez Michel\n- 3:00 PM: Wrap up & Q2 goals\n\nLet me know if you have any conflicts!',
+    preview: "I've booked the venue for March 15-16. Here's the agenda draft for the two days...",
+    body: "I've booked the venue for March 15-16.\n\nDay 1 — Strategy\n- 9:00 AM: Kickoff & retrospective\n- 11:00 AM: Product vision workshop\n- 2:00 PM: Technical architecture review\n\nDay 2 — Team Building\n- 10:00 AM: Escape room\n- 1:00 PM: Lunch at Chez Michel\n- 3:00 PM: Wrap up & Q2 goals\n\nLet me know if you have any conflicts!",
     time: 'Yesterday',
     unread: false,
     starred: true,
@@ -79,8 +71,7 @@ const emails = [
     from: 'Morgan Wu',
     avatar: 'MW',
     subject: 'Invoice #1041 — March services',
-    preview:
-      'Please find attached the invoice for consulting services rendered in March...',
+    preview: 'Please find attached the invoice for consulting services rendered in March...',
     body: 'Hi,\n\nPlease find attached the invoice for consulting services rendered in March.\n\nAmount: $4,200.00\nDue date: April 15, 2026\nPayment terms: Net 30\n\nLet me know if you have any questions.\n\nBest,\nMorgan',
     time: 'Mar 18',
     unread: false,
@@ -97,11 +88,7 @@ export default function Mail() {
     <div className="flex h-screen bg-slate-50/50">
       {/* Sidebar */}
       <div className="flex w-48 shrink-0 flex-col border-r border-slate-200 bg-white p-3">
-        <Button
-          color="primary"
-          size="sm"
-          className="mb-3 w-full font-medium"
-        >
+        <Button color="primary" size="sm" className="mb-3 w-full font-medium">
           Compose
         </Button>
         <nav className="flex flex-col gap-0.5">
@@ -117,9 +104,7 @@ export default function Mail() {
             >
               <f.icon className="h-4 w-4" />
               <span className="flex-1">{f.label}</span>
-              {f.count > 0 && (
-                <span className="text-xs text-slate-400">{f.count}</span>
-              )}
+              {f.count > 0 && <span className="text-xs text-slate-400">{f.count}</span>}
             </button>
           ))}
         </nav>
@@ -136,9 +121,7 @@ export default function Mail() {
               key={email.id}
               onClick={() => setSelectedEmail(email.id)}
               className={`w-full border-b border-slate-100 px-4 py-3 text-left transition-colors ${
-                selectedEmail === email.id
-                  ? 'bg-primary-50'
-                  : 'hover:bg-slate-50'
+                selectedEmail === email.id ? 'bg-primary-50' : 'hover:bg-slate-50'
               }`}
             >
               <div className="flex items-center gap-2">
@@ -149,9 +132,7 @@ export default function Mail() {
                 >
                   {email.from}
                 </span>
-                <span className="shrink-0 text-xs text-slate-400">
-                  {email.time}
-                </span>
+                <span className="shrink-0 text-xs text-slate-400">{email.time}</span>
               </div>
               <p
                 className={`mt-0.5 truncate text-sm ${
@@ -160,9 +141,7 @@ export default function Mail() {
               >
                 {email.subject}
               </p>
-              <p className="mt-0.5 truncate text-xs text-slate-400">
-                {email.preview}
-              </p>
+              <p className="mt-0.5 truncate text-xs text-slate-400">{email.preview}</p>
             </button>
           ))}
         </div>
@@ -184,9 +163,7 @@ export default function Mail() {
               </Button>
             </div>
             <div className="flex-1 overflow-y-auto px-6 py-5">
-              <h2 className="text-lg font-semibold text-slate-900">
-                {current.subject}
-              </h2>
+              <h2 className="text-lg font-semibold text-slate-900">{current.subject}</h2>
               <div className="mt-4 flex items-center gap-3">
                 <Avatar
                   name={current.avatar}
@@ -194,14 +171,10 @@ export default function Mail() {
                   className="bg-slate-200 text-xs text-slate-600"
                 />
                 <div>
-                  <p className="text-sm font-medium text-slate-900">
-                    {current.from}
-                  </p>
+                  <p className="text-sm font-medium text-slate-900">{current.from}</p>
                   <p className="text-xs text-slate-400">{current.time}</p>
                 </div>
-                {current.starred && (
-                  <HiOutlineStar className="ml-auto h-4 w-4 text-amber-400" />
-                )}
+                {current.starred && <HiOutlineStar className="ml-auto h-4 w-4 text-amber-400" />}
               </div>
               <Divider className="my-4" />
               <div className="whitespace-pre-wrap text-sm leading-relaxed text-slate-700">

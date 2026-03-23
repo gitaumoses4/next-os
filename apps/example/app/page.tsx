@@ -25,12 +25,10 @@ export default function Home() {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-8">
       <div className="mx-auto max-w-3xl">
         <div className="mb-10">
-          <h1 className="text-3xl font-bold tracking-tight text-slate-900">
-            next-os
-          </h1>
+          <h1 className="text-3xl font-bold tracking-tight text-slate-900">next-os</h1>
           <p className="mt-2 text-base text-slate-500">
-            A desktop OS shell for your Next.js app. These routes will each
-            render inside their own window.
+            A desktop OS shell for your Next.js app. These routes will each render inside their own
+            window.
           </p>
         </div>
 
@@ -47,9 +45,7 @@ export default function Home() {
                   >
                     <app.icon className="h-6 w-6" />
                   </div>
-                  <span className="text-sm font-medium text-slate-700">
-                    {app.label}
-                  </span>
+                  <span className="text-sm font-medium text-slate-700">{app.label}</span>
                 </CardBody>
               </Card>
             </Link>

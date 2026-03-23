@@ -1,14 +1,6 @@
 'use client'
 
-import {
-  Card,
-  CardBody,
-  CardHeader,
-  Chip,
-  Divider,
-  Progress,
-  Avatar,
-} from '@heroui/react'
+import { Card, CardBody, CardHeader, Chip, Divider, Progress, Avatar } from '@heroui/react'
 import {
   HiOutlineUsers,
   HiOutlineCurrencyDollar,
@@ -72,9 +64,7 @@ export default function Dashboard() {
     <div className="min-h-screen bg-slate-50/50 p-6">
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-slate-900">Dashboard</h1>
-        <p className="text-sm text-slate-500">
-          Overview of your workspace activity
-        </p>
+        <p className="text-sm text-slate-500">Overview of your workspace activity</p>
       </div>
 
       <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -82,9 +72,7 @@ export default function Dashboard() {
           <Card key={stat.label} className="border border-slate-200 shadow-sm">
             <CardBody className="gap-2 p-4">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-medium text-slate-500">
-                  {stat.label}
-                </span>
+                <span className="text-xs font-medium text-slate-500">{stat.label}</span>
                 <div
                   className={`${stat.color} flex h-8 w-8 items-center justify-center rounded-lg`}
                 >
@@ -92,9 +80,7 @@ export default function Dashboard() {
                 </div>
               </div>
               <div className="flex items-end gap-2">
-                <span className="text-2xl font-bold text-slate-900">
-                  {stat.value}
-                </span>
+                <span className="text-2xl font-bold text-slate-900">{stat.value}</span>
                 <Chip
                   size="sm"
                   variant="flat"
@@ -112,9 +98,7 @@ export default function Dashboard() {
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-5">
         <Card className="border border-slate-200 shadow-sm lg:col-span-3">
           <CardHeader className="flex-col items-start px-4 pb-0 pt-4">
-            <h3 className="text-sm font-semibold text-slate-900">
-              Recent Activity
-            </h3>
+            <h3 className="text-sm font-semibold text-slate-900">Recent Activity</h3>
           </CardHeader>
           <CardBody className="px-4 py-3">
             <div className="flex flex-col gap-0">
@@ -127,16 +111,10 @@ export default function Dashboard() {
                       className="shrink-0 bg-slate-200 text-xs text-slate-600"
                     />
                     <div className="min-w-0 flex-1">
-                      <p className="text-sm font-medium text-slate-900">
-                        {item.user}
-                      </p>
-                      <p className="truncate text-xs text-slate-500">
-                        {item.action}
-                      </p>
+                      <p className="text-sm font-medium text-slate-900">{item.user}</p>
+                      <p className="truncate text-xs text-slate-500">{item.action}</p>
                     </div>
-                    <span className="shrink-0 text-xs text-slate-400">
-                      {item.time}
-                    </span>
+                    <span className="shrink-0 text-xs text-slate-400">{item.time}</span>
                   </div>
                   {i < recentActivity.length - 1 && <Divider />}
                 </div>
@@ -147,9 +125,7 @@ export default function Dashboard() {
 
         <Card className="border border-slate-200 shadow-sm lg:col-span-2">
           <CardHeader className="flex-col items-start px-4 pb-0 pt-4">
-            <h3 className="text-sm font-semibold text-slate-900">
-              Top Pages
-            </h3>
+            <h3 className="text-sm font-semibold text-slate-900">Top Pages</h3>
           </CardHeader>
           <CardBody className="gap-4 px-4 py-3">
             {topPages.map((page) => (
@@ -160,12 +136,7 @@ export default function Dashboard() {
                     {page.views.toLocaleString()}
                   </span>
                 </div>
-                <Progress
-                  size="sm"
-                  value={page.pct}
-                  color="primary"
-                  className="h-1.5"
-                />
+                <Progress size="sm" value={page.pct} color="primary" className="h-1.5" />
               </div>
             ))}
           </CardBody>

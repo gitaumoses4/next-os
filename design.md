@@ -7,27 +7,30 @@
 ## 1. Project Overview
 
 ### What It Is
+
 An npm package (`next-os`) that consumers install into an existing Next.js project. It wraps the app in a desktop OS shell — windows, dock/taskbar, desktop icons, wallpaper — without touching the underlying pages. Each "app" in the OS maps to a Next.js route, rendered inside a window via iframe.
 
 ### What It Is Not
+
 - Not a full OS simulation (no file system, no terminal, no fake browser)
 - Not a UI component library
 - Not tied to any one OS aesthetic — fully themeable
 
 ### Inspiration
+
 PostHog's OS mode: the product itself is unchanged, but the shell makes it feel like a native app running on a desktop.
 
 ---
 
 ## 2. Name & Package Identity
 
-| Field       | Value                              |
-|-------------|------------------------------------|
-| Package     | `next-os`                          |
-| Tagline     | _Give your Next.js app a desktop._ |
-| npm scope   | `next-os` (unprefixed, own package) |
-| Peer deps   | `next >= 13`, `react >= 18`        |
-| License     | MIT                                |
+| Field     | Value                               |
+| --------- | ----------------------------------- |
+| Package   | `next-os`                           |
+| Tagline   | _Give your Next.js app a desktop._  |
+| npm scope | `next-os` (unprefixed, own package) |
+| Peer deps | `next >= 13`, `react >= 18`         |
+| License   | MIT                                 |
 
 ---
 
@@ -125,7 +128,7 @@ const apps: AppDefinition[] = [
     defaultSize: { w: 1000, h: 680 },
     defaultPosition: { x: 80, y: 60 },
     resizable: true,
-    instanceable: false,        // only one instance at a time
+    instanceable: false, // only one instance at a time
   },
   {
     id: 'settings',
@@ -141,7 +144,7 @@ const apps: AppDefinition[] = [
     icon: '/icons/notes.png',
     route: '/notes',
     defaultSize: { w: 600, h: 500 },
-    instanceable: true,         // multiple notes windows allowed
+    instanceable: true, // multiple notes windows allowed
   },
 ]
 
@@ -151,9 +154,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <OSShell
           apps={apps}
-          theme="macos"                  // "macos" | "windows11" | "ubuntu" | OSTheme
+          theme="macos" // "macos" | "windows11" | "ubuntu" | OSTheme
           wallpaper="/wallpaper.jpg"
-          taskbarVariant="dock"          // "dock" | "taskbar"
+          taskbarVariant="dock" // "dock" | "taskbar"
           onWindowOpen={(appId) => console.log('opened', appId)}
           onWindowClose={(windowId) => console.log('closed', windowId)}
         >
@@ -171,13 +174,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 interface OSShellProps {
   apps: AppDefinition[]
   theme?: 'macos' | 'windows11' | 'ubuntu' | OSTheme | DeepPartial<OSTheme>
-  wallpaper?: string              // URL or CSS gradient string
+  wallpaper?: string // URL or CSS gradient string
   taskbarVariant?: 'dock' | 'taskbar'
-  initialWindows?: string[]       // appIds to open on mount
+  initialWindows?: string[] // appIds to open on mount
   onWindowOpen?: (appId: string) => void
   onWindowClose?: (windowId: string) => void
   onWindowFocus?: (windowId: string) => void
-  children: React.ReactNode       // renders inside the active window, not behind the shell
+  children: React.ReactNode // renders inside the active window, not behind the shell
 }
 ```
 
@@ -187,15 +190,15 @@ interface OSShellProps {
 interface AppDefinition {
   id: string
   label: string
-  icon: string                    // URL to icon image
-  route: string                   // Next.js route rendered inside window via iframe
+  icon: string // URL to icon image
+  route: string // Next.js route rendered inside window via iframe
   defaultSize: { w: number; h: number }
-  defaultPosition?: { x: number; y: number }  // default: centered
+  defaultPosition?: { x: number; y: number } // default: centered
   minSize?: { w: number; h: number }
   maxSize?: { w: number; h: number }
-  resizable?: boolean             // default: true
-  instanceable?: boolean          // allow multiple windows; default: false
-  titlebarTitle?: string          // override label in titlebar
+  resizable?: boolean // default: true
+  instanceable?: boolean // allow multiple windows; default: false
+  titlebarTitle?: string // override label in titlebar
 }
 ```
 
@@ -208,8 +211,8 @@ interface AppDefinition {
 ```ts
 // Window state shape
 interface WindowState {
-  id: string                      // unique window instance id (uuid)
-  appId: string                   // links back to AppDefinition
+  id: string // unique window instance id (uuid)
+  appId: string // links back to AppDefinition
   title: string
   position: { x: number; y: number }
   size: { w: number; h: number }
@@ -222,10 +225,10 @@ interface WindowState {
 // Store shape
 interface OSStore {
   windows: Record<string, WindowState>
-  zStack: string[]                // ordered list of windowIds, last = top
+  zStack: string[] // ordered list of windowIds, last = top
 
   // Actions
-  openWindow: (appId: string, apps: AppDefinition[]) => string   // returns windowId
+  openWindow: (appId: string, apps: AppDefinition[]) => string // returns windowId
   closeWindow: (windowId: string) => void
   focusWindow: (windowId: string) => void
   minimizeWindow: (windowId: string) => void
@@ -387,18 +390,18 @@ interface OSTheme {
   name: string
 
   windowChrome: {
-    borderRadius: string            // e.g. "10px"
-    titlebarHeight: number          // px
-    titlebarBg: string              // CSS color
+    borderRadius: string // e.g. "10px"
+    titlebarHeight: number // px
+    titlebarBg: string // CSS color
     titlebarBgUnfocused: string
     titlebarTextColor: string
     controlStyle: 'traffic-lights' | 'squares' | 'custom'
     controlsPosition: 'left' | 'right'
-    shadow: string                  // CSS box-shadow
+    shadow: string // CSS box-shadow
     shadowFocused: string
-    border: string                  // e.g. "1px solid rgba(255,255,255,0.2)"
-    glassBg: string                 // e.g. "rgba(30,30,30,0.7)"
-    glassBlur: string               // e.g. "blur(20px)"
+    border: string // e.g. "1px solid rgba(255,255,255,0.2)"
+    glassBg: string // e.g. "rgba(30,30,30,0.7)"
+    glassBlur: string // e.g. "blur(20px)"
   }
 
   dock: {
@@ -433,19 +436,20 @@ interface OSTheme {
   }
 
   animation: {
-    windowOpen: object              // framer-motion variants
+    windowOpen: object // framer-motion variants
     windowClose: object
     windowMinimize: object
     dockBounce: object
   }
 
-  tokens: Record<string, string>   // injected as CSS custom properties
+  tokens: Record<string, string> // injected as CSS custom properties
 }
 ```
 
 ### Built-in Themes
 
 **`macos`**
+
 - Traffic light controls, left-aligned
 - Frosted glass titlebar, 10px border-radius
 - Bottom dock with magnification
@@ -453,6 +457,7 @@ interface OSTheme {
 - Soft shadows, subtle borders
 
 **`windows11`**
+
 - Square controls (min/max/close), right-aligned
 - Solid or acrylic titlebar, 8px border-radius
 - Bottom taskbar, full width
@@ -460,6 +465,7 @@ interface OSTheme {
 - Sharp drop shadows
 
 **`ubuntu`**
+
 - Traffic light controls, left-aligned
 - Solid titlebar (#3d3d3d), 6px border-radius
 - Top dock (left edge option), full width bottom taskbar
@@ -501,14 +507,17 @@ interface OSTheme {
 ## 10. iframe Auth & Routing
 
 ### Session Passthrough
+
 - Same-origin iframes automatically share cookies. As long as the shell and the app are on the same domain, auth (NextAuth, Supabase, custom JWT cookies) works without any configuration.
 
 ### iframe URL Management
+
 - When a window is opened, the iframe `src` is set to `app.route`.
 - The iframe manages its own internal navigation (Next.js router inside it works normally).
 - No attempt to sync the parent URL bar with the window's current route in v1.
 
 ### Loading State
+
 ```tsx
 // WindowContent shows a skeleton while iframe loads
 const [loaded, setLoaded] = useState(false)
@@ -526,15 +535,15 @@ return (
 
 All animations via **framer-motion**.
 
-| Event | Animation |
-|---|---|
-| Window open | Scale from 0.95 + fade in (120ms ease-out) |
-| Window close | Scale to 0.95 + fade out (100ms ease-in) |
-| Window minimize | Translate + scale toward dock icon position (200ms) |
-| Window restore | Reverse of minimize |
+| Event           | Animation                                                  |
+| --------------- | ---------------------------------------------------------- |
+| Window open     | Scale from 0.95 + fade in (120ms ease-out)                 |
+| Window close    | Scale to 0.95 + fade out (100ms ease-in)                   |
+| Window minimize | Translate + scale toward dock icon position (200ms)        |
+| Window restore  | Reverse of minimize                                        |
 | Window maximize | Animate position/size to full viewport (150ms ease-in-out) |
-| Dock bounce | Y keyframe bounce on open (3 bounces, 400ms) |
-| Dock magnify | Scale transform on hover (spring) |
+| Dock bounce     | Y keyframe bounce on open (3 bounces, 400ms)               |
+| Dock magnify    | Scale transform on hover (spring)                          |
 
 ---
 
@@ -568,12 +577,12 @@ All animations via **framer-motion**.
 ```json
 // tsup config (tsup.config.ts)
 {
-  entry: ['src/index.ts'],
-  format: ['esm', 'cjs'],
-  dts: true,
-  sourcemap: true,
-  clean: true,
-  external: ['react', 'react-dom', 'next']
+  "entry": ["src/index.ts"],
+  "format": ["esm", "cjs"],
+  "dts": true,
+  "sourcemap": true,
+  "clean": true,
+  "external": ["react", "react-dom", "next"]
 }
 ```
 
@@ -597,6 +606,7 @@ All animations via **framer-motion**.
 ## 14. v1 Milestone Plan
 
 ### M1 — Scaffold & Shell (Week 1)
+
 - [ ] Monorepo setup with pnpm workspaces + Turborepo
 - [ ] `next-os` package: tsup build pipeline, TypeScript config
 - [ ] `OSProvider` + Zustand store with all actions
@@ -604,6 +614,7 @@ All animations via **framer-motion**.
 - [ ] CSS variable injection from theme
 
 ### M2 — Window Chrome (Week 2)
+
 - [ ] `Window` component with titlebar, content area, resize handles
 - [ ] `WindowControls`: traffic-lights and squares variants
 - [ ] Drag via Pointer Events (`useWindowDrag`)
@@ -612,6 +623,7 @@ All animations via **framer-motion**.
 - [ ] framer-motion: open/close animations
 
 ### M3 — Desktop & Icons (Week 2–3)
+
 - [ ] `Desktop`: wallpaper, icon grid layout
 - [ ] `DesktopIcon`: select on click, open on double-click
 - [ ] Window renders iframe with `app.route`
@@ -619,6 +631,7 @@ All animations via **framer-motion**.
 - [ ] Maximize / restore toggle
 
 ### M4 — Dock & Taskbar (Week 3)
+
 - [ ] `Dock` with running indicators
 - [ ] Dock click behaviour (open / focus / minimize / restore)
 - [ ] Bounce animation on window open
@@ -626,6 +639,7 @@ All animations via **framer-motion**.
 - [ ] `Taskbar` + `TaskbarItem` + `TaskbarClock`
 
 ### M5 — Themes & DX (Week 4)
+
 - [ ] `macos`, `windows11`, `ubuntu` built-in themes
 - [ ] `mergeTheme` util — deep partial merge
 - [ ] `useWindow` public hook
@@ -680,6 +694,7 @@ apps/example/
 When starting this project, execute in order:
 
 1. **Init monorepo**
+
    ```bash
    mkdir next-os && cd next-os
    pnpm init
@@ -687,6 +702,7 @@ When starting this project, execute in order:
    ```
 
 2. **Install monorepo tooling**
+
    ```bash
    pnpm add -Dw turbo
    ```
@@ -696,6 +712,7 @@ When starting this project, execute in order:
 4. **Wire `apps/example`** — install `next`, add the three demo routes, wrap in `OSShell` in `layout.tsx`.
 
 5. **Build**
+
    ```bash
    pnpm --filter next-os build
    pnpm --filter example dev
