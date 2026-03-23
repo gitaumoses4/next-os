@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useState, useEffect } from 'react'
+import { useMemo, useState, useEffect, useCallback } from 'react'
 import type { AppDefinition, DeepPartial } from '@/types'
 import type { OSTheme } from '@/themes/types'
 import { macosTheme } from '@/themes/macos'
@@ -11,11 +11,14 @@ import { WindowManager } from '@/components/WindowManager'
 import { Desktop } from '@/components/Desktop'
 import { Dock } from '@/components/Dock'
 import { Taskbar } from '@/components/Taskbar'
+import { ModeToggle } from '@/components/OSShell/ModeToggle'
 import '@/styles.css'
 
 const builtInThemes: Record<string, OSTheme> = {
   macos: macosTheme,
 }
+
+const STORAGE_KEY = 'deskui-mode'
 
 export interface OSShellProps {
   apps: AppDefinition[]
@@ -23,23 +26,22 @@ export interface OSShellProps {
   wallpaper?: string
   taskbarVariant?: 'dock' | 'taskbar'
   initialWindows?: string[]
+  defaultMode?: 'desktop' | 'web'
   onWindowOpen?: (appId: string) => void
   onWindowClose?: (windowId: string) => void
   onWindowFocus?: (windowId: string) => void
+  onModeChange?: (mode: 'desktop' | 'web') => void
   children: React.ReactNode
 }
 
 function resolveTheme(theme: OSShellProps['theme']): OSTheme {
   if (!theme) return macosTheme
 
-  // String name → built-in theme
   if (typeof theme === 'string') {
     return builtInThemes[theme] ?? macosTheme
   }
 
-  // Full theme object (has `name` field)
   if ('name' in theme && theme.name && typeof theme.name === 'string') {
-    // Check if it's a complete theme by looking for required sections
     if (
       'windowChrome' in theme &&
       'dock' in theme &&
@@ -52,7 +54,6 @@ function resolveTheme(theme: OSShellProps['theme']): OSTheme {
     }
   }
 
-  // Partial theme → merge with macOS defaults
   return mergeTheme(macosTheme, theme as DeepPartial<OSTheme>)
 }
 
@@ -62,25 +63,62 @@ export function OSShell({
   wallpaper,
   taskbarVariant = 'dock',
   initialWindows,
+  defaultMode = 'desktop',
   onWindowOpen,
   onWindowClose,
   onWindowFocus,
+  onModeChange,
   children,
 }: OSShellProps) {
   const [isIframe, setIsIframe] = useState(false)
+  const [mode, setMode] = useState<'desktop' | 'web'>(defaultMode)
 
   useEffect(() => {
     setIsIframe(window.self !== window.top)
+    const saved = localStorage.getItem(STORAGE_KEY) as 'desktop' | 'web' | null
+    if (saved) setMode(saved)
   }, [])
+
+  const toggleMode = useCallback(() => {
+    setMode((prev) => {
+      const next = prev === 'desktop' ? 'web' : 'desktop'
+      localStorage.setItem(STORAGE_KEY, next)
+      onModeChange?.(next)
+      return next
+    })
+  }, [onModeChange])
+
+  // Keyboard shortcut: Ctrl/Cmd + Shift + D
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'D') {
+        e.preventDefault()
+        toggleMode()
+      }
+    }
+    window.addEventListener('keydown', handler)
+    return () => window.removeEventListener('keydown', handler)
+  }, [toggleMode])
 
   const theme = useMemo(() => resolveTheme(themeProp), [themeProp])
   const cssVars = useMemo(() => themeToVars(theme), [theme])
 
-  // Inside an iframe (window content) — render children only, no shell
+  // Inside an iframe — render children only
   if (isIframe) {
     return <>{children}</>
   }
 
+  // Web mode — render children normally
+  if (mode === 'web') {
+    return (
+      <>
+        {children}
+        <ModeToggle mode={mode} onToggle={toggleMode} />
+      </>
+    )
+  }
+
+  // Desktop mode
   return (
     <div
       style={{
@@ -104,6 +142,7 @@ export function OSShell({
         <Desktop />
         <WindowManager />
         {taskbarVariant === 'dock' ? <Dock /> : <Taskbar />}
+        <ModeToggle mode={mode} onToggle={toggleMode} />
         {children}
       </OSProvider>
     </div>
