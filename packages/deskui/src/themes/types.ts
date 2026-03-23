@@ -15,6 +15,7 @@ export interface WindowChromeTheme {
   glassBlur: string
   contentBg: string
   loadingSpinnerColor: string
+  unfocusedFilter: string
 }
 
 export interface DockTheme {
@@ -78,6 +79,22 @@ export interface ModeToggleTheme {
   borderRadius: string
 }
 
+export interface ContextMenuTheme {
+  bg: string
+  blur: string
+  border: string
+  shadow: string
+  borderRadius: string
+  itemColor: string
+  itemHoverBg: string
+  itemHoverColor: string
+  itemDisabledColor: string
+  separatorColor: string
+  shortcutColor: string
+  dangerColor: string
+  dangerHoverBg: string
+}
+
 export interface AnimationTheme {
   windowOpen: Variants
   windowClose: Variants
@@ -92,6 +109,7 @@ export interface OSTheme {
   taskbar: TaskbarTheme
   desktop: DesktopTheme
   commandPalette: CommandPaletteTheme
+  contextMenu: ContextMenuTheme
   modeToggle: ModeToggleTheme
   animation: AnimationTheme
   tokens: Record<string, string>

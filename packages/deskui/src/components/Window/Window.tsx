@@ -75,6 +75,8 @@ export function Window({ windowId }: WindowProps) {
         background: windowChrome.glassBg,
         backdropFilter: windowChrome.glassBlur,
         WebkitBackdropFilter: windowChrome.glassBlur,
+        filter: isFocused ? 'none' : windowChrome.unfocusedFilter,
+        transition: 'filter 0.2s ease, box-shadow 0.2s ease',
       }}
     >
       <WindowTitlebar windowId={windowId} />
