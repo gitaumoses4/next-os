@@ -123,7 +123,7 @@ export function OSLayout({ children }: { children: React.ReactNode }) {
   return (
     <OSShell
       apps={apps}
-      theme="windows11"
+      theme="macos"
       wallpaper="linear-gradient(135deg, #1a1a2e 0%, #16213e 40%, #0f3460 100%)"
       taskbarVariant="dock"
       initialWindows={['dashboard']}

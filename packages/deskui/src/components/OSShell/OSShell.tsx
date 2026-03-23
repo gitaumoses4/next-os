@@ -74,7 +74,7 @@ export function OSShell({
   onModeChange,
   children,
 }: OSShellProps) {
-  const [isIframe, setIsIframe] = useState(false)
+  const [isIframe, setIsIframe] = useState<boolean | null>(null)
   const [mode, setMode] = useState<'desktop' | 'web'>(defaultMode)
 
   useEffect(() => {
@@ -106,6 +106,11 @@ export function OSShell({
 
   const theme = useMemo(() => resolveTheme(themeProp), [themeProp])
   const cssVars = useMemo(() => themeToVars(theme), [theme])
+
+  // Still detecting context — render nothing to prevent flash
+  if (isIframe === null) {
+    return null
+  }
 
   // Inside an iframe — render children only
   if (isIframe) {
