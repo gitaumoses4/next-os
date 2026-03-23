@@ -1,0 +1,6 @@
+{
+  "buildCommand": "pnpm --filter next-os build && pnpm --filter example build",
+  "outputDirectory": "apps/example/.next",
+  "installCommand": "pnpm install",
+  "framework": "nextjs"
+}
