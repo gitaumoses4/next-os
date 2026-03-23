@@ -25,7 +25,7 @@ export default function Home() {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-8">
       <div className="mx-auto max-w-3xl">
         <div className="mb-10">
-          <h1 className="text-3xl font-bold tracking-tight text-slate-900">next-os</h1>
+          <h1 className="text-3xl font-bold tracking-tight text-slate-900">deskui</h1>
           <p className="mt-2 text-base text-slate-500">
             A desktop OS shell for your Next.js app. These routes will each render inside their own
             window.

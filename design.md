@@ -1,6 +1,6 @@
-# next-os — Design Document
+# deskui — Design Document
 
-> **next-os** — An npm package that wraps any Next.js app in a fully interactive desktop OS shell. Drop it in, configure your apps, and your web product gets window chrome, a dock, multi-window management, and a themeable desktop — with zero changes to your existing pages.
+> **deskui** — An npm package that wraps any Next.js app in a fully interactive desktop OS shell. Drop it in, configure your apps, and your web product gets window chrome, a dock, multi-window management, and a themeable desktop — with zero changes to your existing pages.
 
 ---
 
@@ -8,7 +8,7 @@
 
 ### What It Is
 
-An npm package (`next-os`) that consumers install into an existing Next.js project. It wraps the app in a desktop OS shell — windows, dock/taskbar, desktop icons, wallpaper — without touching the underlying pages. Each "app" in the OS maps to a Next.js route, rendered inside a window via iframe.
+An npm package (`deskui`) that consumers install into an existing Next.js project. It wraps the app in a desktop OS shell — windows, dock/taskbar, desktop icons, wallpaper — without touching the underlying pages. Each "app" in the OS maps to a Next.js route, rendered inside a window via iframe.
 
 ### What It Is Not
 
@@ -24,22 +24,22 @@ PostHog's OS mode: the product itself is unchanged, but the shell makes it feel 
 
 ## 2. Name & Package Identity
 
-| Field     | Value                               |
-| --------- | ----------------------------------- |
-| Package   | `next-os`                           |
-| Tagline   | _Give your Next.js app a desktop._  |
-| npm scope | `next-os` (unprefixed, own package) |
-| Peer deps | `next >= 13`, `react >= 18`         |
-| License   | MIT                                 |
+| Field     | Value                              |
+| --------- | ---------------------------------- |
+| Package   | `deskui`                           |
+| Tagline   | _Give your Next.js app a desktop._ |
+| npm scope | `deskui` (unprefixed, own package) |
+| Peer deps | `next >= 13`, `react >= 18`        |
+| License   | MIT                                |
 
 ---
 
 ## 3. Repository Structure
 
 ```
-next-os/
+deskui/
 ├── packages/
-│   └── next-os/                     # The npm package
+│   └── deskui/                     # The npm package
 │       ├── src/
 │       │   ├── components/
 │       │   │   ├── Desktop/
@@ -90,7 +90,7 @@ next-os/
 │       ├── tsconfig.json
 │       └── README.md
 ├── apps/
-│   └── example/                     # Example Next.js app using next-os
+│   └── example/                     # Example Next.js app using deskui
 │       ├── app/
 │       │   ├── layout.tsx
 │       │   ├── page.tsx
@@ -110,14 +110,14 @@ next-os/
 ### Installation
 
 ```bash
-npm install next-os
+npm install deskui
 ```
 
 ### Usage in `app/layout.tsx`
 
 ```tsx
-import { OSShell } from 'next-os'
-import type { AppDefinition } from 'next-os'
+import { OSShell } from 'deskui'
+import type { AppDefinition } from 'deskui'
 
 const apps: AppDefinition[] = [
   {
@@ -500,7 +500,7 @@ interface OSTheme {
   ```
 - No Tailwind dependency — pure CSS modules + CSS variables.
 - Consumer's Tailwind/global styles are isolated inside iframes.
-- Package ships compiled CSS + JS — consumers import from `next-os`.
+- Package ships compiled CSS + JS — consumers import from `deskui`.
 
 ---
 
@@ -608,7 +608,7 @@ All animations via **framer-motion**.
 ### M1 — Scaffold & Shell (Week 1)
 
 - [ ] Monorepo setup with pnpm workspaces + Turborepo
-- [ ] `next-os` package: tsup build pipeline, TypeScript config
+- [ ] `deskui` package: tsup build pipeline, TypeScript config
 - [ ] `OSProvider` + Zustand store with all actions
 - [ ] `OSShell` component renders Desktop + placeholder Dock
 - [ ] CSS variable injection from theme
@@ -656,9 +656,9 @@ All animations via **framer-motion**.
 - **Desktop icon drag-to-reorder**
 - **Multiple desktops / virtual spaces**
 - **Context menus** — right-click on desktop, window titlebar
-- **`next-os.config.ts`** — zero-prop config file at project root
+- **`deskui.config.ts`** — zero-prop config file at project root
 - **Storybook** — isolated component development
-- **`next-os-shell` alias package** — descriptive name redirect
+- **`deskui-shell` alias package** — descriptive name redirect
 - **React Native Web / Tauri** — extend shell to native desktop wrappers
 
 ---
@@ -696,9 +696,9 @@ When starting this project, execute in order:
 1. **Init monorepo**
 
    ```bash
-   mkdir next-os && cd next-os
+   mkdir deskui && cd deskui
    pnpm init
-   mkdir -p packages/next-os apps/example
+   mkdir -p packages/deskui apps/example
    ```
 
 2. **Install monorepo tooling**
@@ -707,14 +707,14 @@ When starting this project, execute in order:
    pnpm add -Dw turbo
    ```
 
-3. **Scaffold `packages/next-os`** — start with `OSContext`, `windowStore`, `OSShell`, `Window`, `Desktop`, `Dock`, `Taskbar` in that order.
+3. **Scaffold `packages/deskui`** — start with `OSContext`, `windowStore`, `OSShell`, `Window`, `Desktop`, `Dock`, `Taskbar` in that order.
 
 4. **Wire `apps/example`** — install `next`, add the three demo routes, wrap in `OSShell` in `layout.tsx`.
 
 5. **Build**
 
    ```bash
-   pnpm --filter next-os build
+   pnpm --filter deskui build
    pnpm --filter example dev
    ```
 

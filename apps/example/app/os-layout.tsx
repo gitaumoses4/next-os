@@ -1,7 +1,7 @@
 'use client'
 
-import { OSShell } from 'next-os'
-import type { AppDefinition } from 'next-os'
+import { OSShell } from 'deskui'
+import type { AppDefinition } from 'deskui'
 import {
   HiOutlineChartBarSquare,
   HiOutlineChartPie,

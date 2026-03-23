@@ -1,5 +1,5 @@
 {
-  "name": "next-os-monorepo",
+  "name": "deskui-monorepo",
   "private": true,
   "packageManager": "pnpm@9.12.2",
   "scripts": {

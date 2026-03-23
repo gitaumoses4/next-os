@@ -4,8 +4,8 @@ import { OSLayout } from './os-layout'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'next-os example',
-  description: 'A demo SaaS app wrapped in next-os',
+  title: 'deskui example',
+  description: 'A demo SaaS app wrapped in deskui',
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
