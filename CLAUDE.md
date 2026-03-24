@@ -1,6 +1,6 @@
-# deskui
+# deskui-react
 
-A desktop OS shell for web apps — windows, dock, taskbar, and themes.
+A desktop OS shell for web apps — windows, dock, taskbar, and themes. Published as `deskui-react` on npm.
 
 ## Project structure
 

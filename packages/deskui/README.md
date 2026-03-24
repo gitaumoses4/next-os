@@ -1,4 +1,7 @@
-# deskui
+# deskui-react
+
+[![npm](https://img.shields.io/npm/v/deskui-react)](https://www.npmjs.com/package/deskui-react)
+[![license](https://img.shields.io/npm/l/deskui-react)](https://github.com/gitaumoses4/deskui/blob/main/LICENSE)
 
 A desktop OS shell for your web app. Drop it in and your product gets windows, a dock, a menu bar, and a full desktop experience — with zero changes to your existing pages.
 
