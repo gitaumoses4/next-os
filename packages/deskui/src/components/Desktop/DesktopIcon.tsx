@@ -33,7 +33,7 @@ export function DesktopIcon({ app, isSelected, onSelect }: DesktopIconProps) {
         padding: 8,
         border: 'none',
         background: isSelected ? iconSelectedBg : 'transparent',
-        borderRadius: 8,
+        borderRadius: 0,
         cursor: 'pointer',
         width: iconSize + 32,
       }}

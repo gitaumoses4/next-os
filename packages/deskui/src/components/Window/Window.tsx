@@ -45,7 +45,7 @@ export function Window({ windowId }: WindowProps) {
         top: win.position.y,
         width: win.size.w,
         height: win.size.h,
-        borderRadius: isMaximized ? 0 : parseInt(windowChrome.borderRadius) || 12,
+        borderRadius: isMaximized ? 0 : parseInt(windowChrome.borderRadius) || 0,
       }}
       exit="exit"
       transition={
@@ -73,6 +73,7 @@ export function Window({ windowId }: WindowProps) {
         display: win.status === 'minimized' ? 'none' : 'flex',
         flexDirection: 'column',
         overflow: 'hidden',
+        borderRadius: windowChrome.borderRadius,
         boxShadow: isFocused
           ? `${windowChrome.shadowFocused}, 0 0 0 1px ${theme.tokens['accent-color'] ?? 'rgba(99, 102, 241, 0.3)'}`
           : windowChrome.shadow,
