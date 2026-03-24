@@ -1,6 +1,6 @@
 'use client'
 
-import { motion } from 'framer-motion'
+import { motion, useReducedMotion } from 'framer-motion'
 import { useOSStore } from '@/store/windowStore'
 import { useOSContext } from '@/context/OSContext'
 import { WindowTitlebar } from './WindowTitlebar'
@@ -16,6 +16,7 @@ export function Window({ windowId }: WindowProps) {
   const win = useOSStore((s) => s.windows[windowId])
   const focusWindow = useOSStore((s) => s.focusWindow)
   const isDragging = useOSStore((s) => s.draggingWindowId === windowId)
+  const prefersReducedMotion = useReducedMotion()
 
   if (!win) return null
 
@@ -48,12 +49,14 @@ export function Window({ windowId }: WindowProps) {
       }}
       exit="exit"
       transition={
-        isDragging
+        isDragging || prefersReducedMotion
           ? {
               left: { duration: 0 },
               top: { duration: 0 },
               width: { duration: 0 },
               height: { duration: 0 },
+              opacity: { duration: prefersReducedMotion ? 0.1 : 0 },
+              scale: { duration: 0 },
             }
           : {
               left: { type: 'tween', duration: 0.2, ease: [0.2, 0.8, 0.2, 1] },

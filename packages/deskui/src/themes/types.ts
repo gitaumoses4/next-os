@@ -35,6 +35,7 @@ export interface DockTheme {
   tooltipColor: string
   badgeBg: string
   badgeColor: string
+  autoHide: boolean
 }
 
 export interface TaskbarTheme {

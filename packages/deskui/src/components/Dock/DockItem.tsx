@@ -1,7 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { motion, useAnimation } from 'framer-motion'
+import { motion, useAnimation, useReducedMotion } from 'framer-motion'
 import { useOSStore } from '@/store/windowStore'
 import { useOSContext } from '@/context/OSContext'
 import { AppIcon } from '@/components/shared/AppIcon'
@@ -26,8 +26,10 @@ export function DockItem({ app }: DockItemProps) {
   const hasWindow = appWindows.length > 0
   const focusedWindow = appWindows.find((w) => w.isFocused)
   const minimizedWindow = appWindows.find((w) => w.status === 'minimized')
+  const prefersReducedMotion = useReducedMotion()
 
   useEffect(() => {
+    if (prefersReducedMotion) return
     if (appWindows.length > prevWindowCountRef.current && appWindows.length > 0) {
       bounceControls.start({
         y: [0, -20, 0, -12, 0, -6, 0],
@@ -35,7 +37,7 @@ export function DockItem({ app }: DockItemProps) {
       })
     }
     prevWindowCountRef.current = appWindows.length
-  }, [appWindows.length, bounceControls])
+  }, [appWindows.length, bounceControls, prefersReducedMotion])
 
   const onClick = useCallback(() => {
     if (!hasWindow) {
