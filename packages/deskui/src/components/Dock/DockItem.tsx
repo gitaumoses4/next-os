@@ -60,6 +60,7 @@ export function DockItem({ app }: DockItemProps) {
     restoreWindow,
   ])
 
+  const badge = useOSStore((s) => s.badges[app.id] ?? 0)
   const { itemSize } = theme.dock
 
   return (
@@ -83,7 +84,32 @@ export function DockItem({ app }: DockItemProps) {
           transition: 'background 0.15s ease',
         }}
       >
-        <AppIcon icon={app.icon} size={itemSize} borderRadius={itemSize * 0.2} />
+        <div style={{ position: 'relative' }}>
+          <AppIcon icon={app.icon} size={itemSize} borderRadius={itemSize * 0.2} />
+          {badge > 0 && (
+            <div
+              style={{
+                position: 'absolute',
+                top: -4,
+                right: -4,
+                minWidth: 16,
+                height: 16,
+                borderRadius: 8,
+                background: theme.dock.badgeBg,
+                color: theme.dock.badgeColor,
+                fontSize: 10,
+                fontWeight: 700,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: '0 4px',
+                lineHeight: 1,
+              }}
+            >
+              {badge > 99 ? '99+' : badge}
+            </div>
+          )}
+        </div>
         {hasWindow && (
           <div
             style={{

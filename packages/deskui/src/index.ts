@@ -17,6 +17,7 @@ export { useFocus } from './hooks/useFocus'
 export { useTheme } from './hooks/useTheme'
 export { useWindowDrag } from './hooks/useWindowDrag'
 export { useWindowResize } from './hooks/useWindowResize'
+export { useDeskuiBridge } from './hooks/useDeskuiBridge'
 
 // Context
 export { useOSContext } from './context/OSContext'

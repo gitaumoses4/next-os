@@ -17,6 +17,7 @@ import { CommandPalette } from '@/components/CommandPalette'
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts'
 import { SnapPreview } from '@/components/SnapPreview'
 import { WindowSwitcher } from '@/components/WindowSwitcher'
+import { useBridgeListener } from '@/hooks/useBridgeListener'
 import '@/styles.css'
 
 const STORAGE_KEY = 'deskui-mode'
@@ -119,6 +120,9 @@ export function OSShell({
     barPosition,
     onToggleCommandPalette: toggleCommandPalette,
   })
+
+  // Listen for postMessage from iframe windows
+  useBridgeListener()
 
   // Still detecting context — render nothing to prevent flash
   if (isIframe === null) {

@@ -10,6 +10,7 @@ export interface AppDefinition {
   resizable?: boolean
   instanceable?: boolean
   titlebarTitle?: string
+  skeleton?: React.ReactNode
 }
 
 export type DeepPartial<T> = {

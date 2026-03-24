@@ -36,6 +36,8 @@ export const defaultTheme: OSTheme = {
     hoverBg: 'rgba(255, 255, 255, 0.15)',
     tooltipBg: 'rgba(0, 0, 0, 0.75)',
     tooltipColor: '#ffffff',
+    badgeBg: '#ef4444',
+    badgeColor: '#ffffff',
   },
 
   taskbar: {
