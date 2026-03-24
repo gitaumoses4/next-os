@@ -32,6 +32,9 @@ export type SnapZone =
   | 'bottom-left'
   | 'bottom-right'
   | 'top'
+  | 'left-third'
+  | 'center-third'
+  | 'right-third'
   | null
 
 export interface OSStore {
@@ -159,6 +162,8 @@ export const useOSStore = create<OSStore>((set, get) => ({
     const halfW = Math.round(vw / 2)
     const halfH = Math.round(vh / 2)
 
+    const thirdW = Math.round(vw / 3)
+
     const zoneMap: Record<string, { x: number; y: number; w: number; h: number }> = {
       left: { x: 0, y: topOffset, w: halfW, h: vh },
       right: { x: halfW, y: topOffset, w: halfW, h: vh },
@@ -167,6 +172,9 @@ export const useOSStore = create<OSStore>((set, get) => ({
       'top-right': { x: halfW, y: topOffset, w: halfW, h: halfH },
       'bottom-left': { x: 0, y: topOffset + halfH, w: halfW, h: halfH },
       'bottom-right': { x: halfW, y: topOffset + halfH, w: halfW, h: halfH },
+      'left-third': { x: 0, y: topOffset, w: thirdW, h: vh },
+      'center-third': { x: thirdW, y: topOffset, w: thirdW, h: vh },
+      'right-third': { x: thirdW * 2, y: topOffset, w: vw - thirdW * 2, h: vh },
     }
 
     const rect = zoneMap[zone]

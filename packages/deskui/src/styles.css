@@ -69,3 +69,20 @@
   scrollbar-color: var(--nos-scrollbar-thumb, rgba(0, 0, 0, 0.2))
     var(--nos-scrollbar-track, transparent);
 }
+
+/* High contrast mode */
+@media (prefers-contrast: more) {
+  [role='dialog'] {
+    border: 2px solid currentColor !important;
+    box-shadow: none !important;
+  }
+
+  [role='toolbar'] {
+    border: 2px solid currentColor !important;
+  }
+
+  button:focus-visible {
+    outline: 3px solid currentColor !important;
+    outline-offset: 2px;
+  }
+}

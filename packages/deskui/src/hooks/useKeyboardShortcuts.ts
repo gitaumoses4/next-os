@@ -57,6 +57,33 @@ export function useKeyboardShortcuts({
         return
       }
 
+      // Cmd/Ctrl+Arrow: tile focused window (halves)
+      // Cmd/Ctrl+Shift+Arrow: tile focused window (thirds)
+      if (mod && (e.key === 'ArrowLeft' || e.key === 'ArrowRight' || e.key === 'ArrowUp')) {
+        e.preventDefault()
+        const focused = Object.values(store.windows).find((w) => w.isFocused)
+        if (!focused) return
+
+        const barHeight = reservedSpace?.height ?? 0
+        const barPosition = reservedSpace?.position ?? 'bottom'
+
+        if (e.shiftKey) {
+          // Thirds
+          if (e.key === 'ArrowLeft')
+            store.snapWindow(focused.id, 'left-third', barHeight, barPosition)
+          if (e.key === 'ArrowRight')
+            store.snapWindow(focused.id, 'right-third', barHeight, barPosition)
+          if (e.key === 'ArrowUp')
+            store.snapWindow(focused.id, 'center-third', barHeight, barPosition)
+        } else {
+          // Halves / maximize
+          if (e.key === 'ArrowLeft') store.snapWindow(focused.id, 'left', barHeight, barPosition)
+          if (e.key === 'ArrowRight') store.snapWindow(focused.id, 'right', barHeight, barPosition)
+          if (e.key === 'ArrowUp') store.maximizeWindow(focused.id, reservedSpace)
+        }
+        return
+      }
+
       // Cmd/Ctrl+Tab is handled by WindowSwitcher component
 
       // Cmd/Ctrl+`: cycle windows of same app

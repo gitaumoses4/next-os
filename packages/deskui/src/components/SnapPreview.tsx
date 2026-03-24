@@ -20,6 +20,8 @@ export function SnapPreview() {
   const halfW = Math.round(vw / 2)
   const halfH = Math.round(vh / 2)
 
+  const thirdW = Math.round(vw / 3)
+
   const zoneStyles: Record<string, React.CSSProperties> = {
     left: { left: 0, top: topOffset, width: halfW, height: vh },
     right: { left: halfW, top: topOffset, width: halfW, height: vh },
@@ -28,6 +30,9 @@ export function SnapPreview() {
     'top-right': { left: halfW, top: topOffset, width: halfW, height: halfH },
     'bottom-left': { left: 0, top: topOffset + halfH, width: halfW, height: halfH },
     'bottom-right': { left: halfW, top: topOffset + halfH, width: halfW, height: halfH },
+    'left-third': { left: 0, top: topOffset, width: thirdW, height: vh },
+    'center-third': { left: thirdW, top: topOffset, width: thirdW, height: vh },
+    'right-third': { left: thirdW * 2, top: topOffset, width: vw - thirdW * 2, height: vh },
   }
 
   const style = zoneStyles[snapPreview]

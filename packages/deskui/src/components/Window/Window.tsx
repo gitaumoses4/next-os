@@ -1,6 +1,7 @@
 'use client'
 
 import { motion, useReducedMotion } from 'framer-motion'
+import { useHighContrast } from '@/hooks/useHighContrast'
 import { useOSStore } from '@/store/windowStore'
 import { useOSContext } from '@/context/OSContext'
 import { WindowTitlebar } from './WindowTitlebar'
@@ -18,6 +19,7 @@ export function Window({ windowId }: WindowProps) {
   const isDragging = useOSStore((s) => s.draggingWindowId === windowId)
   const isShaking = useOSStore((s) => s.shakeWindowId === windowId)
   const prefersReducedMotion = useReducedMotion()
+  const highContrast = useHighContrast()
 
   if (!win) return null
 
@@ -86,9 +88,14 @@ export function Window({ windowId }: WindowProps) {
         background: windowChrome.glassBg,
         backdropFilter: windowChrome.glassBlur,
         WebkitBackdropFilter: windowChrome.glassBlur,
-        filter: isFocused ? 'none' : windowChrome.unfocusedFilter,
+        filter: isFocused || highContrast ? 'none' : windowChrome.unfocusedFilter,
         transition: 'filter 0.2s ease, box-shadow 0.25s ease',
         animation: isShaking ? 'nos-shake 0.4s ease' : undefined,
+        outline: highContrast
+          ? isFocused
+            ? '3px solid currentColor'
+            : '2px solid currentColor'
+          : undefined,
       }}
     >
       {!isPip && <WindowTitlebar windowId={windowId} app={app} />}

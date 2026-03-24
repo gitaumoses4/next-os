@@ -24,6 +24,7 @@ export { useWindowEvents } from './hooks/useWindowEvents'
 export { useOSEvents } from './hooks/useOSEvents'
 export { useGlassStyle } from './hooks/useGlassStyle'
 export { useMiddleware } from './hooks/useMiddleware'
+export { useHighContrast } from './hooks/useHighContrast'
 
 // Context
 export { useOSContext } from './context/OSContext'
