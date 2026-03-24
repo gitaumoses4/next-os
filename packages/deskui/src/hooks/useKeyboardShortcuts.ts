@@ -6,10 +6,17 @@ import type { AppDefinition } from '@/types'
 
 interface KeyboardShortcutsOptions {
   apps: AppDefinition[]
+  barHeight: number
+  barPosition: 'top' | 'bottom'
   onToggleCommandPalette?: () => void
 }
 
-export function useKeyboardShortcuts({ apps, onToggleCommandPalette }: KeyboardShortcutsOptions) {
+export function useKeyboardShortcuts({
+  apps,
+  barHeight,
+  barPosition,
+  onToggleCommandPalette,
+}: KeyboardShortcutsOptions) {
   const store = useOSStore()
 
   useEffect(() => {
@@ -47,24 +54,12 @@ export function useKeyboardShortcuts({ apps, onToggleCommandPalette }: KeyboardS
         if (focused.status === 'maximized') {
           store.restoreWindow(focused.id)
         } else {
-          store.maximizeWindow(focused.id)
+          store.maximizeWindow(focused.id, barHeight, barPosition)
         }
         return
       }
 
-      // Cmd/Ctrl+Tab: cycle through open windows
-      if (mod && e.key === 'Tab') {
-        e.preventDefault()
-        const visibleIds = store.zStack.filter((id) => store.windows[id]?.status !== 'minimized')
-        if (visibleIds.length < 2) return
-
-        const focusedIdx = visibleIds.findIndex((id) => store.windows[id]?.isFocused)
-        const nextIdx = e.shiftKey
-          ? (focusedIdx - 1 + visibleIds.length) % visibleIds.length
-          : (focusedIdx + 1) % visibleIds.length
-        store.focusWindow(visibleIds[nextIdx])
-        return
-      }
+      // Cmd/Ctrl+Tab is handled by WindowSwitcher component
 
       // Cmd/Ctrl+`: cycle windows of same app
       if (mod && e.key === '`') {
@@ -87,5 +82,5 @@ export function useKeyboardShortcuts({ apps, onToggleCommandPalette }: KeyboardS
 
     window.addEventListener('keydown', handler)
     return () => window.removeEventListener('keydown', handler)
-  }, [store, apps, onToggleCommandPalette])
+  }, [store, apps, barHeight, barPosition, onToggleCommandPalette])
 }

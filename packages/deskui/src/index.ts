@@ -9,6 +9,7 @@ export { Taskbar } from './components/Taskbar'
 export { CommandPalette } from './components/CommandPalette'
 export { ContextMenu } from './components/ContextMenu'
 export type { ContextMenuItem } from './components/ContextMenu'
+export type { SnapZone } from './store/windowStore'
 
 // Hooks
 export { useWindow } from './hooks/useWindow'

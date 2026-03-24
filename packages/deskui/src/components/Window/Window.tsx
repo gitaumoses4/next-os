@@ -26,7 +26,6 @@ export function Window({ windowId }: WindowProps) {
   const { windowChrome } = theme
   const isFocused = win.isFocused
 
-  const dockHeight = theme.dock.height
   const isMaximized = win.status === 'maximized'
 
   return (
@@ -40,10 +39,10 @@ export function Window({ windowId }: WindowProps) {
         opacity: 1,
         scale: 1,
         y: 0,
-        left: isMaximized ? 0 : win.position.x,
-        top: isMaximized ? 0 : win.position.y,
-        width: isMaximized ? window.innerWidth : win.size.w,
-        height: isMaximized ? window.innerHeight - dockHeight : win.size.h,
+        left: win.position.x,
+        top: win.position.y,
+        width: win.size.w,
+        height: win.size.h,
         borderRadius: isMaximized ? 0 : parseInt(windowChrome.borderRadius) || 12,
       }}
       exit="exit"
@@ -81,6 +80,17 @@ export function Window({ windowId }: WindowProps) {
     >
       <WindowTitlebar windowId={windowId} />
       <WindowContent route={app.route} />
+      {/* Transparent overlay to capture clicks when unfocused (iframe swallows pointer events) */}
+      {!isFocused && (
+        <div
+          onPointerDown={() => focusWindow(windowId)}
+          style={{
+            position: 'absolute',
+            inset: 0,
+            zIndex: 1,
+          }}
+        />
+      )}
       {isResizable && <WindowResizeHandles windowId={windowId} />}
     </motion.div>
   )

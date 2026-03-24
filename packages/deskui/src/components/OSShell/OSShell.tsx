@@ -15,6 +15,8 @@ import { Taskbar } from '@/components/Taskbar'
 import { ModeToggle } from '@/components/OSShell/ModeToggle'
 import { CommandPalette } from '@/components/CommandPalette'
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts'
+import { SnapPreview } from '@/components/SnapPreview'
+import { WindowSwitcher } from '@/components/WindowSwitcher'
 import '@/styles.css'
 
 const STORAGE_KEY = 'deskui-mode'
@@ -105,11 +107,18 @@ export function OSShell({
     return () => window.removeEventListener('keydown', handler)
   }, [toggleMode, showDesktop])
 
-  // Window management shortcuts: Ctrl/Cmd+W, M, Tab, K, etc.
-  useKeyboardShortcuts({ apps, onToggleCommandPalette: toggleCommandPalette })
-
   const theme = useMemo(() => resolveTheme(themeProp), [themeProp])
   const cssVars = useMemo(() => themeToVars(theme), [theme])
+
+  // Window management shortcuts: Ctrl/Cmd+W, M, Tab, K, etc.
+  const barHeight = taskbarVariant === 'dock' ? theme.dock.height : theme.taskbar.height
+  const barPosition = taskbarVariant === 'dock' ? theme.dock.position : theme.taskbar.position
+  useKeyboardShortcuts({
+    apps,
+    barHeight,
+    barPosition,
+    onToggleCommandPalette: toggleCommandPalette,
+  })
 
   // Still detecting context — render nothing to prevent flash
   if (isIframe === null) {
@@ -153,8 +162,10 @@ export function OSShell({
         onWindowFocus={onWindowFocus}
       >
         <Desktop />
+        <SnapPreview />
         <WindowManager />
         {taskbarVariant === 'dock' ? <Dock /> : <Taskbar />}
+        <WindowSwitcher />
         <ModeToggle mode={mode} onToggle={toggleMode} themeTokens={theme.modeToggle} />
         <CommandPalette open={commandPaletteOpen} onClose={() => setCommandPaletteOpen(false)} />
         {children}
