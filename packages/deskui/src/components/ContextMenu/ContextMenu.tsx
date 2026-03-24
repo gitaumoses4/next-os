@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState, useLayoutEffect } from 'react'
+import { createPortal } from 'react-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import type { ContextMenuTheme } from '@/themes/types'
 
@@ -93,10 +94,9 @@ export function ContextMenu({ items, position, onClose, theme: cm }: ContextMenu
     return () => window.removeEventListener('keydown', handler)
   }, [position, items, selectedIndex, onClose])
 
-  // Render off-screen first to measure, then clamp
   const displayPos = clamped ?? position
 
-  return (
+  const menu = (
     <AnimatePresence>
       {position && (
         <motion.div
@@ -184,4 +184,7 @@ export function ContextMenu({ items, position, onClose, theme: cm }: ContextMenu
       )}
     </AnimatePresence>
   )
+
+  if (typeof document === 'undefined') return null
+  return createPortal(menu, document.body)
 }
