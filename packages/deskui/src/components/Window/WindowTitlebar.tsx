@@ -1,10 +1,12 @@
 'use client'
 
-import { useCallback } from 'react'
+import { useCallback, useState } from 'react'
 import { useOSContext } from '@/context/OSContext'
 import { useOSStore } from '@/store/windowStore'
 import { useWindowDrag } from '@/hooks/useWindowDrag'
 import { WindowControls } from './WindowControls'
+import { ContextMenu } from '@/components/ContextMenu'
+import type { ContextMenuItem } from '@/components/ContextMenu'
 
 interface WindowTitlebarProps {
   windowId: string
@@ -16,24 +18,66 @@ export function WindowTitlebar({ windowId }: WindowTitlebarProps) {
   const win = useOSStore((s) => s.windows[windowId])
   const maximizeWindow = useOSStore((s) => s.maximizeWindow)
   const restoreWindow = useOSStore((s) => s.restoreWindow)
+  const minimizeWindow = useOSStore((s) => s.minimizeWindow)
+  const closeWindow = useOSStore((s) => s.closeWindow)
+  const moveWindow = useOSStore((s) => s.moveWindow)
+  const [contextMenuPos, setContextMenuPos] = useState<{ x: number; y: number } | null>(null)
 
   const { titlebarHeight, titlebarBg, titlebarBgUnfocused, titlebarTextColor, controlsPosition } =
     theme.windowChrome
 
   const isFocused = win?.isFocused ?? false
+  const isMaximized = win?.status === 'maximized'
 
   const onDoubleClick = useCallback(() => {
-    if (win?.status === 'maximized') {
+    if (isMaximized) {
       restoreWindow(windowId)
     } else {
       maximizeWindow(windowId)
     }
-  }, [win?.status, windowId, maximizeWindow, restoreWindow])
+  }, [isMaximized, windowId, maximizeWindow, restoreWindow])
+
+  const onContextMenu = useCallback((e: React.MouseEvent) => {
+    e.preventDefault()
+    setContextMenuPos({ x: e.clientX, y: e.clientY })
+  }, [])
+
+  const titlebarMenuItems: ContextMenuItem[] = [
+    {
+      label: isMaximized ? 'Restore' : 'Maximize',
+      shortcut: '⌘⇧F',
+      action: () => (isMaximized ? restoreWindow(windowId) : maximizeWindow(windowId)),
+    },
+    {
+      label: 'Minimize',
+      shortcut: '⌘M',
+      action: () => minimizeWindow(windowId),
+    },
+    {
+      label: 'Move to Center',
+      action: () => {
+        if (win) {
+          moveWindow(windowId, {
+            x: Math.round((window.innerWidth - win.size.w) / 2),
+            y: Math.round((window.innerHeight - win.size.h) / 2),
+          })
+        }
+      },
+    },
+    { separator: true, label: '' },
+    {
+      label: 'Close',
+      shortcut: '⌘W',
+      danger: true,
+      action: () => closeWindow(windowId),
+    },
+  ]
 
   return (
     <div
       {...dragProps}
       onDoubleClick={onDoubleClick}
+      onContextMenu={onContextMenu}
       style={{
         ...dragProps.style,
         height: titlebarHeight,
@@ -45,7 +89,7 @@ export function WindowTitlebar({ windowId }: WindowTitlebarProps) {
         gap: 8,
         borderTopLeftRadius: 'inherit',
         borderTopRightRadius: 'inherit',
-        cursor: win?.status === 'maximized' ? 'default' : 'grab',
+        cursor: isMaximized ? 'default' : 'grab',
         flexShrink: 0,
       }}
     >
@@ -64,8 +108,14 @@ export function WindowTitlebar({ windowId }: WindowTitlebarProps) {
       >
         {win?.title}
       </span>
-      {/* Spacer to balance controls when left-positioned */}
       {controlsPosition === 'left' && <div style={{ width: 60 }} />}
+
+      <ContextMenu
+        items={titlebarMenuItems}
+        position={contextMenuPos}
+        onClose={() => setContextMenuPos(null)}
+        theme={theme.contextMenu}
+      />
     </div>
   )
 }

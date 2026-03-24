@@ -7,6 +7,8 @@ export { Desktop } from './components/Desktop'
 export { Dock } from './components/Dock'
 export { Taskbar } from './components/Taskbar'
 export { CommandPalette } from './components/CommandPalette'
+export { ContextMenu } from './components/ContextMenu'
+export type { ContextMenuItem } from './components/ContextMenu'
 
 // Hooks
 export { useWindow } from './hooks/useWindow'

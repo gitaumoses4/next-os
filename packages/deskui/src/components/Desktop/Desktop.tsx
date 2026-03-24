@@ -4,11 +4,16 @@ import { useState, useCallback } from 'react'
 import { useOSContext } from '@/context/OSContext'
 import { useOSStore } from '@/store/windowStore'
 import { DesktopIcon } from './DesktopIcon'
+import { ContextMenu } from '@/components/ContextMenu'
+import type { ContextMenuItem } from '@/components/ContextMenu'
 
 export function Desktop() {
   const { apps, theme, wallpaper } = useOSContext()
   const blurAll = useOSStore((s) => s.blurAll)
+  const showDesktop = useOSStore((s) => s.showDesktop)
+  const openWindow = useOSStore((s) => s.openWindow)
   const [selectedAppId, setSelectedAppId] = useState<string | null>(null)
+  const [contextMenuPos, setContextMenuPos] = useState<{ x: number; y: number } | null>(null)
   const { gridGap, gridPadding } = theme.desktop
 
   const wallpaperStyle: React.CSSProperties = wallpaper
@@ -31,9 +36,29 @@ export function Desktop() {
     [blurAll],
   )
 
+  const onContextMenu = useCallback((e: React.MouseEvent) => {
+    if (e.target === e.currentTarget) {
+      e.preventDefault()
+      setContextMenuPos({ x: e.clientX, y: e.clientY })
+    }
+  }, [])
+
+  const desktopMenuItems: ContextMenuItem[] = [
+    ...apps.map((app) => ({
+      label: `Open ${app.label}`,
+      action: () => openWindow(app.id, apps),
+    })),
+    { separator: true, label: '' },
+    {
+      label: 'Show All Windows',
+      action: () => showDesktop(),
+    },
+  ]
+
   return (
     <div
       onClick={onDesktopClick}
+      onContextMenu={onContextMenu}
       style={{
         position: 'absolute',
         inset: 0,
@@ -61,6 +86,13 @@ export function Desktop() {
           />
         ))}
       </div>
+
+      <ContextMenu
+        items={desktopMenuItems}
+        position={contextMenuPos}
+        onClose={() => setContextMenuPos(null)}
+        theme={theme.contextMenu}
+      />
     </div>
   )
 }

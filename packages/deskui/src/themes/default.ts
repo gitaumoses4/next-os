@@ -18,6 +18,7 @@ export const defaultTheme: OSTheme = {
     glassBlur: 'blur(24px)',
     contentBg: '#f8f8f8',
     loadingSpinnerColor: '#999',
+    unfocusedFilter: 'saturate(0.85) brightness(0.97)',
   },
 
   dock: {
@@ -70,6 +71,22 @@ export const defaultTheme: OSTheme = {
     hintColor: 'rgba(255, 255, 255, 0.3)',
     overlayBg: 'rgba(0, 0, 0, 0.3)',
     borderRadius: '14px',
+  },
+
+  contextMenu: {
+    bg: 'rgba(30, 30, 30, 0.92)',
+    blur: 'blur(20px)',
+    border: '1px solid rgba(255, 255, 255, 0.1)',
+    shadow: '0 8px 30px rgba(0, 0, 0, 0.35)',
+    borderRadius: '10px',
+    itemColor: '#ffffff',
+    itemHoverBg: 'rgba(255, 255, 255, 0.1)',
+    itemHoverColor: '#ffffff',
+    itemDisabledColor: 'rgba(255, 255, 255, 0.25)',
+    separatorColor: 'rgba(255, 255, 255, 0.08)',
+    shortcutColor: 'rgba(255, 255, 255, 0.3)',
+    dangerColor: '#ff5f57',
+    dangerHoverBg: 'rgba(255, 95, 87, 0.15)',
   },
 
   modeToggle: {
