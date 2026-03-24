@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, useLayoutEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import type { ContextMenuTheme } from '@/themes/types'
 
@@ -20,21 +20,32 @@ interface ContextMenuProps {
   theme: ContextMenuTheme
 }
 
+function clampToViewport(x: number, y: number, el: HTMLElement | null) {
+  if (!el) return { x, y }
+  const rect = el.getBoundingClientRect()
+  return {
+    x: Math.max(8, Math.min(x, window.innerWidth - rect.width - 8)),
+    y: Math.max(8, Math.min(y, window.innerHeight - rect.height - 8)),
+  }
+}
+
 export function ContextMenu({ items, position, onClose, theme: cm }: ContextMenuProps) {
   const menuRef = useRef<HTMLDivElement>(null)
-  const [adjustedPos, setAdjustedPos] = useState(position)
   const [selectedIndex, setSelectedIndex] = useState(-1)
+  const [clamped, setClamped] = useState<{ x: number; y: number } | null>(null)
 
-  // Adjust position to keep menu in viewport
-  useEffect(() => {
-    if (!position || !menuRef.current) {
-      setAdjustedPos(position)
-      return
+  // Clamp after the menu has rendered and has dimensions
+  useLayoutEffect(() => {
+    if (position && menuRef.current) {
+      setClamped(clampToViewport(position.x, position.y, menuRef.current))
+    } else {
+      setClamped(null)
     }
-    const rect = menuRef.current.getBoundingClientRect()
-    const x = Math.min(position.x, window.innerWidth - rect.width - 8)
-    const y = Math.min(position.y, window.innerHeight - rect.height - 8)
-    setAdjustedPos({ x: Math.max(8, x), y: Math.max(8, y) })
+  }, [position])
+
+  // Reset selection on open
+  useEffect(() => {
+    setSelectedIndex(-1)
   }, [position])
 
   // Close on click outside
@@ -82,19 +93,27 @@ export function ContextMenu({ items, position, onClose, theme: cm }: ContextMenu
     return () => window.removeEventListener('keydown', handler)
   }, [position, items, selectedIndex, onClose])
 
+  // Render off-screen first to measure, then clamp
+  const displayPos = clamped ?? position
+
   return (
     <AnimatePresence>
       {position && (
         <motion.div
           ref={menuRef}
           initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
+          animate={{
+            opacity: 1,
+            scale: 1,
+            left: displayPos?.x,
+            top: displayPos?.y,
+          }}
           exit={{ opacity: 0, scale: 0.95 }}
           transition={{ duration: 0.1 }}
           style={{
             position: 'fixed',
-            left: adjustedPos?.x ?? position.x,
-            top: adjustedPos?.y ?? position.y,
+            left: displayPos?.x,
+            top: displayPos?.y,
             zIndex: 9997,
             minWidth: 200,
             background: cm.bg,
@@ -105,6 +124,7 @@ export function ContextMenu({ items, position, onClose, theme: cm }: ContextMenu
             boxShadow: cm.shadow,
             padding: '4px 0',
             overflow: 'hidden',
+            transformOrigin: 'top left',
           }}
         >
           {items.map((item, i) =>
