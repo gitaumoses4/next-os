@@ -35,7 +35,7 @@ export function useWindowDrag(windowId: string) {
   const setSnapPreview = useOSStore((s) => s.setSnapPreview)
   const snapWindow = useOSStore((s) => s.snapWindow)
   const windows = useOSStore((s) => s.windows)
-  const { theme } = useOSContext()
+  const { theme, taskbarVariant } = useOSContext()
   const offsetRef = useRef({ x: 0, y: 0 })
   const wasDraggingMaximized = useRef(false)
   const rafRef = useRef<number | null>(null)
@@ -122,10 +122,10 @@ export function useWindowDrag(windowId: string) {
       // Snap if in a zone
       const zone = currentSnapZone.current
       if (zone) {
-        // For non-maximize snaps, account for dock/taskbar unless auto-hide
-        const dockAutoHides = theme.dock.autoHide
-        const barHeight = dockAutoHides ? 0 : theme.dock.height
-        const barPosition = theme.dock.position
+        // Taskbar is always visible — reserve its space for all snaps
+        // Dock auto-hides — no reserved space
+        const barHeight = taskbarVariant === 'taskbar' ? theme.taskbar.height : 0
+        const barPosition = taskbarVariant === 'taskbar' ? theme.taskbar.position : 'bottom'
         snapWindow(windowId, zone, barHeight, barPosition)
         currentSnapZone.current = null
       }

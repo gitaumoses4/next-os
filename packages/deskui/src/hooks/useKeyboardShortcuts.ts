@@ -6,10 +6,15 @@ import type { AppDefinition } from '@/types'
 
 interface KeyboardShortcutsOptions {
   apps: AppDefinition[]
+  reservedSpace?: { height: number; position: 'top' | 'bottom' }
   onToggleCommandPalette?: () => void
 }
 
-export function useKeyboardShortcuts({ apps, onToggleCommandPalette }: KeyboardShortcutsOptions) {
+export function useKeyboardShortcuts({
+  apps,
+  reservedSpace,
+  onToggleCommandPalette,
+}: KeyboardShortcutsOptions) {
   const store = useOSStore()
 
   useEffect(() => {
@@ -47,7 +52,7 @@ export function useKeyboardShortcuts({ apps, onToggleCommandPalette }: KeyboardS
         if (focused.status === 'maximized') {
           store.restoreWindow(focused.id)
         } else {
-          store.maximizeWindow(focused.id)
+          store.maximizeWindow(focused.id, reservedSpace)
         }
         return
       }
@@ -75,5 +80,5 @@ export function useKeyboardShortcuts({ apps, onToggleCommandPalette }: KeyboardS
 
     window.addEventListener('keydown', handler)
     return () => window.removeEventListener('keydown', handler)
-  }, [store, apps, onToggleCommandPalette])
+  }, [store, apps, reservedSpace, onToggleCommandPalette])
 }

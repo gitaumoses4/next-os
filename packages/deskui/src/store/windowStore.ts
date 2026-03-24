@@ -50,7 +50,10 @@ export interface OSStore {
   closeWindow: (windowId: string) => void
   focusWindow: (windowId: string) => void
   minimizeWindow: (windowId: string) => void
-  maximizeWindow: (windowId: string) => void
+  maximizeWindow: (
+    windowId: string,
+    reservedSpace?: { height: number; position: 'top' | 'bottom' },
+  ) => void
   restoreWindow: (windowId: string) => void
   moveWindow: (windowId: string, position: { x: number; y: number }) => void
   resizeWindow: (windowId: string, size: { w: number; h: number }) => void
@@ -243,11 +246,13 @@ export const useOSStore = create<OSStore>((set, get) => ({
     set({ windows: setFocused(newWindows, topWindowId) })
   },
 
-  maximizeWindow: (windowId) => {
+  maximizeWindow: (windowId, reservedSpace) => {
     const state = get()
     const win = state.windows[windowId]
     if (!win || win.status === 'maximized') return
 
+    const barH = reservedSpace?.height ?? 0
+    const barPos = reservedSpace?.position ?? 'bottom'
     const newWindows = {
       ...state.windows,
       [windowId]: {
@@ -255,8 +260,8 @@ export const useOSStore = create<OSStore>((set, get) => ({
         preMaximizePosition: { ...win.position },
         preMaximizeSize: { ...win.size },
         status: 'maximized' as const,
-        position: { x: 0, y: 0 },
-        size: { w: window.innerWidth, h: window.innerHeight },
+        position: { x: 0, y: barPos === 'top' ? barH : 0 },
+        size: { w: window.innerWidth, h: window.innerHeight - barH },
       },
     }
 

@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useOSStore } from '@/store/windowStore'
 import { useOSContext } from '@/context/OSContext'
+import { useReservedSpace } from '@/hooks/useReservedSpace'
 
 interface WindowControlsProps {
   windowId: string
@@ -17,12 +18,13 @@ export function WindowControls({ windowId }: WindowControlsProps) {
   const restoreWindow = useOSStore((s) => s.restoreWindow)
   const win = useOSStore((s) => s.windows[windowId])
   const isMaximized = win?.status === 'maximized'
+  const reservedSpace = useReservedSpace()
 
   const toggleMaximize = () => {
     if (isMaximized) {
       restoreWindow(windowId)
     } else {
-      maximizeWindow(windowId)
+      maximizeWindow(windowId, reservedSpace)
     }
   }
 

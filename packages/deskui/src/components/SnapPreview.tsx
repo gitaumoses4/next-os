@@ -10,8 +10,9 @@ export function SnapPreview() {
 
   if (!snapPreview) return null
 
-  const barHeight = taskbarVariant === 'dock' ? theme.dock.height : theme.taskbar.height
-  const barPosition = taskbarVariant === 'dock' ? theme.dock.position : theme.taskbar.position
+  // Dock auto-hides — no reserved space. Taskbar is always visible.
+  const barHeight = taskbarVariant === 'taskbar' ? theme.taskbar.height : 0
+  const barPosition = taskbarVariant === 'taskbar' ? theme.taskbar.position : 'bottom'
   const topOffset = barPosition === 'top' ? barHeight : 0
 
   const vw = window.innerWidth
