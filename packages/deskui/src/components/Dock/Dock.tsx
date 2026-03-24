@@ -1,41 +1,37 @@
 'use client'
 
-import { useState, useCallback, useRef, useEffect } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { useOSContext } from '@/context/OSContext'
+import { useOSStore } from '@/store/windowStore'
 import { DockItem } from './DockItem'
 
-const AUTO_HIDE_DELAY = 800
 const HOVER_ZONE_SIZE = 8
 
 export function Dock() {
   const { apps, theme } = useOSContext()
   const { height, bg, blur, borderRadius, padding, gap, position, border, autoHide } = theme.dock
-  const [visible, setVisible] = useState(!autoHide)
-  const hideTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const windows = useOSStore((s) => s.windows)
+  const [hovered, setHovered] = useState(false)
 
-  const cancelHideTimer = useCallback(() => {
-    if (hideTimerRef.current) {
-      clearTimeout(hideTimerRef.current)
-      hideTimerRef.current = null
-    }
-  }, [])
+  // Check if any visible window intersects with the dock area
+  const hasIntersectingWindow = (() => {
+    if (!autoHide) return false
+    const dockTop = position === 'bottom' ? window.innerHeight - height - 16 : 0
+    const dockBottom = position === 'bottom' ? window.innerHeight : height + 16
 
-  const startHideTimer = useCallback(() => {
-    if (!autoHide) return
-    cancelHideTimer()
-    hideTimerRef.current = setTimeout(() => setVisible(false), AUTO_HIDE_DELAY)
-  }, [autoHide, cancelHideTimer])
+    return Object.values(windows).some((win) => {
+      if (win.status === 'minimized') return false
+      const winBottom = win.position.y + win.size.h
+      const winTop = win.position.y
+      // Window overlaps the dock zone
+      return winBottom > dockTop && winTop < dockBottom
+    })
+  })()
 
-  const onDockEnter = useCallback(() => {
-    cancelHideTimer()
-    setVisible(true)
-  }, [cancelHideTimer])
+  const shouldHide = autoHide && hasIntersectingWindow && !hovered
 
-  const onDockLeave = useCallback(() => {
-    startHideTimer()
-  }, [startHideTimer])
-
+  // Edge hover zone to reveal dock when auto-hidden
   useEffect(() => {
     if (!autoHide) return
 
@@ -46,27 +42,18 @@ export function Dock() {
           : e.clientY <= HOVER_ZONE_SIZE
 
       if (atEdge) {
-        cancelHideTimer()
-        setVisible(true)
+        setHovered(true)
       }
     }
 
     window.addEventListener('mousemove', handler)
     return () => window.removeEventListener('mousemove', handler)
-  }, [autoHide, position, cancelHideTimer])
-
-  useEffect(() => {
-    if (autoHide) {
-      const timer = setTimeout(() => setVisible(false), AUTO_HIDE_DELAY)
-      return () => clearTimeout(timer)
-    }
-  }, [autoHide])
+  }, [autoHide, position])
 
   const hiddenOffset = height + 20
   const isBottom = position === 'bottom'
 
   return (
-    // Outer wrapper for centering — not animated, so transform isn't overridden
     <div
       style={{
         position: 'absolute',
@@ -77,11 +64,11 @@ export function Dock() {
       }}
     >
       <motion.div
-        onMouseEnter={onDockEnter}
-        onMouseLeave={onDockLeave}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
         animate={{
-          y: visible ? 0 : isBottom ? hiddenOffset : -hiddenOffset,
-          opacity: visible ? 1 : 0,
+          y: shouldHide ? (isBottom ? hiddenOffset : -hiddenOffset) : 0,
+          opacity: shouldHide ? 0 : 1,
         }}
         transition={{ type: 'tween', duration: 0.25, ease: [0.2, 0.8, 0.2, 1] }}
         style={{

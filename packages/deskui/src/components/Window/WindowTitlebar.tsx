@@ -28,16 +28,14 @@ export function WindowTitlebar({ windowId }: WindowTitlebarProps) {
 
   const isFocused = win?.isFocused ?? false
   const isMaximized = win?.status === 'maximized'
-  const barHeight = taskbarVariant === 'dock' ? theme.dock.height : theme.taskbar.height
-  const barPosition = taskbarVariant === 'dock' ? theme.dock.position : theme.taskbar.position
 
   const onDoubleClick = useCallback(() => {
     if (isMaximized) {
       restoreWindow(windowId)
     } else {
-      maximizeWindow(windowId, barHeight, barPosition)
+      maximizeWindow(windowId)
     }
-  }, [isMaximized, windowId, maximizeWindow, restoreWindow, barHeight, barPosition])
+  }, [isMaximized, windowId, maximizeWindow, restoreWindow])
 
   const onContextMenu = useCallback((e: React.MouseEvent) => {
     e.preventDefault()
@@ -48,8 +46,7 @@ export function WindowTitlebar({ windowId }: WindowTitlebarProps) {
     {
       label: isMaximized ? 'Restore' : 'Maximize',
       shortcut: '⌘⇧F',
-      action: () =>
-        isMaximized ? restoreWindow(windowId) : maximizeWindow(windowId, barHeight, barPosition),
+      action: () => (isMaximized ? restoreWindow(windowId) : maximizeWindow(windowId)),
     },
     {
       label: 'Minimize',

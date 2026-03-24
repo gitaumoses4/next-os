@@ -115,12 +115,8 @@ export function OSShell({
   const cssVars = useMemo(() => themeToVars(theme), [theme])
 
   // Window management shortcuts: Ctrl/Cmd+W, M, Tab, K, etc.
-  const barHeight = taskbarVariant === 'dock' ? theme.dock.height : theme.taskbar.height
-  const barPosition = taskbarVariant === 'dock' ? theme.dock.position : theme.taskbar.position
   useKeyboardShortcuts({
     apps,
-    barHeight,
-    barPosition,
     onToggleCommandPalette: toggleCommandPalette,
   })
 

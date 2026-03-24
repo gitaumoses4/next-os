@@ -122,9 +122,10 @@ export function useWindowDrag(windowId: string) {
       // Snap if in a zone
       const zone = currentSnapZone.current
       if (zone) {
-        const variant = theme.dock ? 'dock' : 'taskbar'
-        const barHeight = variant === 'dock' ? theme.dock.height : theme.taskbar.height
-        const barPosition = variant === 'dock' ? theme.dock.position : theme.taskbar.position
+        // For non-maximize snaps, account for dock/taskbar unless auto-hide
+        const dockAutoHides = theme.dock.autoHide
+        const barHeight = dockAutoHides ? 0 : theme.dock.height
+        const barPosition = theme.dock.position
         snapWindow(windowId, zone, barHeight, barPosition)
         currentSnapZone.current = null
       }
