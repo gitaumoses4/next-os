@@ -1,20 +1,29 @@
 'use client'
 
+import { useMemo } from 'react'
 import { useOSContext } from '@/context/OSContext'
 import { useOSStore } from '@/store/windowStore'
 import { useNotificationStore } from '@/store/notificationStore'
-import { TaskbarItem } from './TaskbarItem'
+import { TaskbarGroup } from './TaskbarGroup'
 import { TaskbarClock } from './TaskbarClock'
 
 export function Taskbar() {
-  const { theme } = useOSContext()
+  const { theme, apps } = useOSContext()
   const windows = useOSStore((s) => s.windows)
   const showDesktop = useOSStore((s) => s.showDesktop)
   const togglePanel = useNotificationStore((s) => s.togglePanel)
   const unreadCount = useNotificationStore((s) => s.notifications.filter((n) => !n.read).length)
   const { height, bg, blur, textColor, position, itemActiveBg } = theme.taskbar
 
-  const openWindows = Object.values(windows)
+  // Group windows by appId
+  const windowGroups = useMemo(() => {
+    const groups: Record<string, (typeof windows)[string][]> = {}
+    for (const win of Object.values(windows)) {
+      if (!groups[win.appId]) groups[win.appId] = []
+      groups[win.appId].push(win)
+    }
+    return groups
+  }, [windows])
 
   return (
     <div
@@ -68,9 +77,11 @@ export function Taskbar() {
           overflow: 'hidden',
         }}
       >
-        {openWindows.map((win) => (
-          <TaskbarItem key={win.id} windowState={win} />
-        ))}
+        {Object.entries(windowGroups).map(([appId, wins]) => {
+          const app = apps.find((a) => a.id === appId)
+          if (!app) return null
+          return <TaskbarGroup key={appId} app={app} windows={wins} />
+        })}
       </div>
 
       {/* System tray */}

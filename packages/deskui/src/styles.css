@@ -44,3 +44,28 @@
   background: #e81123 !important;
   color: white !important;
 }
+
+/* Theme-aware scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--nos-scrollbar-track, transparent);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--nos-scrollbar-thumb, rgba(0, 0, 0, 0.2));
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--nos-scrollbar-thumb-hover, rgba(0, 0, 0, 0.35));
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--nos-scrollbar-thumb, rgba(0, 0, 0, 0.2))
+    var(--nos-scrollbar-track, transparent);
+}

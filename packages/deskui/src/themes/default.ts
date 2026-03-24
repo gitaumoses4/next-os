@@ -158,5 +158,8 @@ export const defaultTheme: OSTheme = {
     'font-family':
       '-apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", system-ui, sans-serif',
     'accent-color': '#007aff',
+    'scrollbar-thumb': 'rgba(0, 0, 0, 0.2)',
+    'scrollbar-thumb-hover': 'rgba(0, 0, 0, 0.35)',
+    'scrollbar-track': 'transparent',
   },
 }
