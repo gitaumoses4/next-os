@@ -28,7 +28,7 @@ packages/deskui/src/
 ├── store/             # Zustand window store (windowStore.ts)
 ├── themes/            # default.ts, types.ts
 ├── utils/             # mergeTheme, themeVars (CSS variable injection)
-├── types.ts           # AppDefinition, DeepPartial
+├── types.ts           # AppDefinition, AppComponentProps, DeepPartial
 ├── styles.css         # Keyframes and utility classes
 └── index.ts           # Public exports barrel
 ```
@@ -58,7 +58,8 @@ pnpm --filter example build   # Build the example app
 
 ## Key architecture decisions
 
-- **Iframe isolation**: Each app window renders its route in an iframe. OSShell detects when it's inside an iframe (`window.self !== window.top`) and skips the shell, rendering only children. This prevents recursive nesting.
+- **Component or iframe rendering**: Apps can provide a `component` field (a React component) to render inline within the window, or fall back to iframe isolation via `route`. When a component is provided, the wrapper div applies the current `colorScheme` class for Tailwind/CSS dark mode compatibility. The unfocused pointer-event overlay is skipped for component-based apps since they don't swallow events like iframes do.
+- **Iframe isolation**: When no `component` is provided, each app window renders its route in an iframe. OSShell detects when it's inside an iframe (`window.self !== window.top`) and skips the shell, rendering only children. This prevents recursive nesting.
 - **Zustand store**: All window state (position, size, z-index, focus) lives in a single Zustand store. z-index is derived from a `zStack` array (BASE_Z 100 + index). Dock/taskbar at z-index 200.
 - **CSS variables**: Theme tokens are injected as `--nos-*` CSS custom properties on the shell root div. No Tailwind dependency in the package itself.
 - **Path aliases**: The deskui package uses `@/*` path aliases (mapped to `src/*` in tsconfig). tsup resolves these at build time.

@@ -78,7 +78,7 @@ export default function Layout({ children }) {
 }
 ```
 
-Each app's `route` is rendered inside an iframe within its window. Your existing pages work unchanged — auth, routing, and styles are isolated.
+Each app's `route` is rendered inside an iframe within its window by default. You can also pass a `component` to render inline — no iframe, instant load, shared React context. Your existing pages work unchanged either way.
 
 ## OSShell Props
 
@@ -106,7 +106,8 @@ interface AppDefinition {
   id: string
   label: string
   icon: React.ReactNode // React component, string URL, or { src, src2x }
-  route: string // rendered inside iframe
+  route: string // URL path — used as iframe src, or as route identifier with component
+  component?: React.ComponentType<AppComponentProps> // render inline instead of iframe
   defaultSize: { w: number; h: number }
   defaultPosition?: { x: number; y: number }
   minSize?: { w: number; h: number }
@@ -119,7 +120,16 @@ interface AppDefinition {
   renderTitlebar?: (props: TitlebarRenderProps) => React.ReactNode
   renderControls?: (props: ControlsRenderProps) => React.ReactNode
 }
+
+interface AppComponentProps {
+  windowId: string
+  appId: string
+  route: string
+  colorScheme: 'light' | 'dark'
+}
 ```
+
+When `component` is provided, it renders directly inside the window — no iframe, no loading skeleton, shared React tree. The component receives `AppComponentProps` including the current `colorScheme`. If `component` is omitted, the `route` is loaded in an iframe as before.
 
 ## Color Scheme
 
@@ -152,18 +162,20 @@ import { defaultTheme, defaultDarkTheme } from 'deskui-react'
 
 ## URL Sync
 
-Open windows based on the URL:
+Sync the URL pathname with the focused window:
 
 ```tsx
-<OSShell syncWithUrl />              // Read URL on mount
-<OSShell syncWithUrl="read-write" /> // Read and update URL on changes
+<OSShell syncWithUrl />              // Read URL on mount, open matching app
+<OSShell syncWithUrl="read-write" /> // Also update URL when focus changes
 ```
 
-| URL                     | Effect                                  |
-| ----------------------- | --------------------------------------- |
-| `/dashboard`            | Opens the app with `route="/dashboard"` |
-| `?apps=dashboard,notes` | Opens multiple apps                     |
-| `?apps=mail&focus=mail` | Opens and focuses mail                  |
+| URL          | Effect                                              |
+| ------------ | --------------------------------------------------- |
+| `/dashboard` | Opens and focuses the app with `route="/dashboard"` |
+| `/notes`     | Opens and focuses notes, skips `initialWindows`     |
+| `/`          | No match — opens `initialWindows` as normal         |
+
+In `read-write` mode, focusing a window updates the pathname to that app's route. Navigating to an app route directly skips `initialWindows` and only opens the matched app.
 
 ## Keyboard Shortcuts
 
@@ -238,11 +250,12 @@ useMiddleware((action, next) => {
 ## Architecture
 
 - **Zustand store** — all window state in a single store
-- **Iframe isolation** — each app route in an iframe, styles don't leak
+- **Component or iframe** — apps render as inline React components or isolated iframes
 - **CSS variables** — theme tokens as `--nos-*` custom properties
 - **Pointer Events** — native drag/resize, no external libraries
 - **framer-motion** — window animations
 - **postMessage bridge** — iframe-to-shell communication
+- **URL sync** — pathname reflects focused app, deep-linkable
 
 ## License
 

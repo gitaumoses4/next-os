@@ -2,6 +2,7 @@
 
 import { OSShell, useColorScheme } from 'deskui-react'
 import type { AppDefinition } from 'deskui-react'
+import Notes from './notes/page'
 import {
   HiOutlineChartBarSquare,
   HiOutlineChartPie,
@@ -101,6 +102,7 @@ const apps: AppDefinition[] = [
       </Icon>
     ),
     route: '/notes',
+    component: Notes,
     defaultSize: { w: 640, h: 500 },
     instanceable: true,
   },
@@ -129,6 +131,7 @@ export function OSLayout({ children }: { children: React.ReactNode }) {
       taskbarVariant="dock"
       initialWindows={['dashboard']}
       onToggleColorScheme={toggle}
+      syncWithUrl="read-write"
     >
       {children}
     </OSShell>

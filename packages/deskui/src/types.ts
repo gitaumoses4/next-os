@@ -3,6 +3,7 @@ export interface AppDefinition {
   label: string
   icon: React.ReactNode
   route: string
+  component?: React.ComponentType<AppComponentProps>
   defaultSize: { w: number; h: number }
   defaultPosition?: { x: number; y: number }
   minSize?: { w: number; h: number }
@@ -14,6 +15,13 @@ export interface AppDefinition {
   beforeClose?: () => boolean | Promise<boolean>
   renderTitlebar?: (props: TitlebarRenderProps) => React.ReactNode
   renderControls?: (props: ControlsRenderProps) => React.ReactNode
+}
+
+export interface AppComponentProps {
+  windowId: string
+  appId: string
+  route: string
+  colorScheme: 'light' | 'dark'
 }
 
 export interface TitlebarRenderProps {

@@ -38,6 +38,7 @@ export type { WindowState, OSStore } from './store/windowStore'
 // Types
 export type {
   AppDefinition,
+  AppComponentProps,
   DeepPartial,
   TitlebarRenderProps,
   ControlsRenderProps,

@@ -68,7 +68,7 @@ export default function Notes() {
   }
 
   return (
-    <div className="flex h-screen bg-content1">
+    <div className="flex h-full bg-content1">
       {/* Sidebar */}
       <div className="flex w-64 shrink-0 flex-col border-r border-divider bg-default-50">
         <div className="flex items-center gap-2 border-b border-divider p-3">

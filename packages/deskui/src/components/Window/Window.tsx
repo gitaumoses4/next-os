@@ -179,9 +179,15 @@ export function Window({ windowId }: WindowProps) {
           })}
         </div>
       )}
-      <WindowContent route={app.route} skeleton={app.skeleton} />
+      <WindowContent
+        windowId={windowId}
+        appId={app.id}
+        route={app.route}
+        component={app.component}
+        skeleton={app.skeleton}
+      />
       {/* Transparent overlay to capture clicks when unfocused (iframe swallows pointer events) */}
-      {!isFocused && (
+      {!isFocused && !app.component && (
         <div
           onPointerDown={() => focusWindow(windowId)}
           style={{

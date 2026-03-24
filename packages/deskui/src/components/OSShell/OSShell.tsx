@@ -145,6 +145,16 @@ export function OSShell({
     onToggleCommandPalette: toggleCommandPalette,
   })
 
+  // If URL pathname matches an app route, skip initialWindows
+  const urlOverridesInitial = useMemo(() => {
+    if (!syncWithUrl || typeof window === 'undefined') return false
+    const pathname = window.location.pathname
+    if (pathname && pathname !== '/') {
+      return apps.some((app) => pathname === app.route || pathname.startsWith(app.route + '/'))
+    }
+    return false
+  }, [syncWithUrl, apps])
+
   // Listen for postMessage from iframe windows
   useBridgeListener()
   useFocusTrap()
@@ -190,7 +200,7 @@ export function OSShell({
         theme={theme}
         taskbarVariant={taskbarVariant}
         wallpaper={wallpaper}
-        initialWindows={initialWindows}
+        initialWindows={urlOverridesInitial ? undefined : initialWindows}
         onWindowOpen={onWindowOpen}
         onWindowClose={onWindowClose}
         onWindowFocus={onWindowFocus}

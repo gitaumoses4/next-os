@@ -2,9 +2,13 @@
 
 import { useState, useRef, useCallback } from 'react'
 import { useOSContext } from '@/context/OSContext'
+import type { AppComponentProps } from '@/types'
 
 interface WindowContentProps {
+  windowId: string
+  appId: string
   route: string
+  component?: React.ComponentType<AppComponentProps>
   skeleton?: React.ReactNode
 }
 
@@ -13,7 +17,13 @@ function buildIframeSrc(route: string, colorScheme: 'light' | 'dark'): string {
   return `${route}${separator}_deskui_colorScheme=${colorScheme}`
 }
 
-export function WindowContent({ route, skeleton }: WindowContentProps) {
+export function WindowContent({
+  windowId,
+  appId,
+  route,
+  component: Component,
+  skeleton,
+}: WindowContentProps) {
   const { theme } = useOSContext()
   const [loaded, setLoaded] = useState(false)
   const iframeRef = useRef<HTMLIFrameElement>(null)
@@ -28,6 +38,17 @@ export function WindowContent({ route, skeleton }: WindowContentProps) {
       '*',
     )
   }, [colorScheme])
+
+  if (Component) {
+    return (
+      <div
+        className={colorScheme}
+        style={{ flex: 1, position: 'relative', overflow: 'hidden', colorScheme }}
+      >
+        <Component windowId={windowId} appId={appId} route={route} colorScheme={colorScheme} />
+      </div>
+    )
+  }
 
   return (
     <div style={{ flex: 1, position: 'relative', overflow: 'hidden' }}>
