@@ -1,6 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { motion, useAnimation, useReducedMotion, AnimatePresence } from 'framer-motion'
 import { useOSStore } from '@/store/windowStore'
 import { useOSContext } from '@/context/OSContext'
@@ -22,6 +23,8 @@ export function DockItem({ app }: DockItemProps) {
   const bounceControls = useAnimation()
   const prevWindowCountRef = useRef(0)
   const [hovered, setHovered] = useState(false)
+  const [popupOpen, setPopupOpen] = useState(false)
+  const buttonRef = useRef<HTMLDivElement>(null)
 
   const appWindows = Object.values(windows).filter((w) => w.appId === app.id)
   const hasWindow = appWindows.length > 0
@@ -45,16 +48,11 @@ export function DockItem({ app }: DockItemProps) {
       openWindow(app.id, apps)
     } else if (minimizedWindow) {
       restoreWindow(minimizedWindow.id)
+    } else if (appWindows.length > 1) {
+      // Multiple windows: show popup to pick one
+      setPopupOpen((v) => !v)
     } else if (focusedWindow) {
-      // If other windows of this app exist behind it, shake to reveal
-      const otherWindows = appWindows.filter(
-        (w) => w.id !== focusedWindow.id && w.status !== 'minimized',
-      )
-      if (otherWindows.length > 0) {
-        shakeWindow(focusedWindow.id)
-      } else {
-        minimizeWindow(focusedWindow.id)
-      }
+      minimizeWindow(focusedWindow.id)
     } else {
       focusWindow(appWindows[0].id)
     }
@@ -76,7 +74,7 @@ export function DockItem({ app }: DockItemProps) {
   const { itemSize } = theme.dock
 
   return (
-    <div style={{ position: 'relative' }}>
+    <div ref={buttonRef} style={{ position: 'relative' }}>
       <motion.button
         onClick={onClick}
         animate={bounceControls}
@@ -125,14 +123,19 @@ export function DockItem({ app }: DockItemProps) {
           )}
         </div>
         {hasWindow && (
-          <div
-            style={{
-              width: 4,
-              height: 4,
-              borderRadius: '50%',
-              background: theme.dock.runningIndicatorColor,
-            }}
-          />
+          <div style={{ display: 'flex', gap: 2 }}>
+            {Array.from({ length: Math.min(appWindows.length, 3) }).map((_, i) => (
+              <div
+                key={i}
+                style={{
+                  width: 4,
+                  height: 4,
+                  borderRadius: '50%',
+                  background: theme.dock.runningIndicatorColor,
+                }}
+              />
+            ))}
+          </div>
         )}
       </motion.button>
 
@@ -164,6 +167,84 @@ export function DockItem({ app }: DockItemProps) {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Window list popup for multiple windows */}
+      {popupOpen &&
+        appWindows.length > 1 &&
+        typeof document !== 'undefined' &&
+        createPortal(
+          <>
+            <div
+              onClick={() => setPopupOpen(false)}
+              style={{ position: 'fixed', inset: 0, zIndex: 9996 }}
+            />
+            <AnimatePresence>
+              <motion.div
+                initial={{ opacity: 0, y: 4 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 4 }}
+                transition={{ duration: 0.12 }}
+                style={{
+                  position: 'fixed',
+                  left: buttonRef.current
+                    ? buttonRef.current.getBoundingClientRect().left +
+                      buttonRef.current.getBoundingClientRect().width / 2 -
+                      100
+                    : 0,
+                  bottom: buttonRef.current
+                    ? window.innerHeight - buttonRef.current.getBoundingClientRect().top + 8
+                    : 80,
+                  zIndex: 9997,
+                  background: theme.contextMenu.bg,
+                  backdropFilter: theme.contextMenu.blur,
+                  WebkitBackdropFilter: theme.contextMenu.blur,
+                  border: theme.contextMenu.border,
+                  borderRadius: theme.contextMenu.borderRadius,
+                  boxShadow: theme.contextMenu.shadow,
+                  padding: '4px 0',
+                  minWidth: 200,
+                }}
+              >
+                {appWindows.map((win) => (
+                  <button
+                    key={win.id}
+                    onClick={() => {
+                      focusWindow(win.id)
+                      setPopupOpen(false)
+                    }}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 8,
+                      width: '100%',
+                      padding: '6px 14px',
+                      border: 'none',
+                      background: win.isFocused ? theme.contextMenu.itemHoverBg : 'transparent',
+                      color: win.isFocused
+                        ? theme.contextMenu.itemHoverColor
+                        : theme.contextMenu.itemColor,
+                      fontSize: 13,
+                      textAlign: 'left',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    <AppIcon icon={app.icon} size={14} />
+                    <span
+                      style={{
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap',
+                      }}
+                    >
+                      {win.title}
+                    </span>
+                  </button>
+                ))}
+              </motion.div>
+            </AnimatePresence>
+          </>,
+          document.body,
+        )}
     </div>
   )
 }

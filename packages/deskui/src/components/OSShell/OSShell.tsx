@@ -22,6 +22,7 @@ import { usePersistedLayout } from '@/hooks/usePersistedLayout'
 import { ToastContainer, NotificationPanel } from '@/components/Notification'
 import { MissionControl } from '@/components/MissionControl'
 import { MenuBar } from '@/components/MenuBar'
+import { useFocusTrap } from '@/hooks/useFocusTrap'
 import { LockScreen } from '@/components/LockScreen'
 import '@/styles.css'
 
@@ -141,6 +142,7 @@ export function OSShell({
 
   // Listen for postMessage from iframe windows
   useBridgeListener()
+  useFocusTrap()
   usePersistedLayout(persistLayout)
 
   // Still detecting context — render nothing to prevent flash
