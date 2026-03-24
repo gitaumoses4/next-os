@@ -122,10 +122,9 @@ export function useWindowDrag(windowId: string) {
       // Snap if in a zone
       const zone = currentSnapZone.current
       if (zone) {
-        // Taskbar is always visible — reserve its space for all snaps
-        // Dock auto-hides — no reserved space
-        const barHeight = taskbarVariant === 'taskbar' ? theme.taskbar.height : 0
-        const barPosition = taskbarVariant === 'taskbar' ? theme.taskbar.position : 'bottom'
+        // Dock mode: menu bar at top. Taskbar mode: taskbar at top/bottom.
+        const barHeight = taskbarVariant === 'taskbar' ? theme.taskbar.height : theme.menuBar.height
+        const barPosition = taskbarVariant === 'taskbar' ? theme.taskbar.position : 'top'
         snapWindow(windowId, zone, barHeight, barPosition)
         currentSnapZone.current = null
       }

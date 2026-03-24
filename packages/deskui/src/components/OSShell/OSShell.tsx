@@ -123,10 +123,11 @@ export function OSShell({
   const cssVars = useMemo(() => themeToVars(theme), [theme])
 
   // Window management shortcuts: Ctrl/Cmd+W, M, Tab, K, etc.
+  // Dock mode: menu bar at top. Taskbar mode: taskbar at top/bottom.
   const reservedSpace =
     taskbarVariant === 'taskbar'
       ? { height: theme.taskbar.height, position: theme.taskbar.position }
-      : undefined
+      : { height: theme.menuBar.height, position: 'top' as const }
   useKeyboardShortcuts({
     apps,
     reservedSpace,

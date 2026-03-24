@@ -4,7 +4,7 @@ import { useOSContext } from '@/context/OSContext'
 
 /**
  * Returns the reserved space for the current bar variant.
- * Dock mode: no reserved space (dock auto-hides behind maximized windows).
+ * Dock mode: reserves menu bar height at the top.
  * Taskbar mode: reserves taskbar height (taskbar is always visible).
  */
 export function useReservedSpace() {
@@ -17,6 +17,9 @@ export function useReservedSpace() {
     } as const
   }
 
-  // Dock auto-hides — no reserved space
-  return undefined
+  // Dock mode: menu bar at top
+  return {
+    height: theme.menuBar.height,
+    position: 'top' as const,
+  }
 }
