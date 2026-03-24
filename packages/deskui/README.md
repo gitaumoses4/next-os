@@ -7,7 +7,7 @@ A desktop OS shell for your web app. Drop it in and your product gets windows, a
 ## Installation
 
 ```bash
-npm install deskui
+npm install deskui-react
 ```
 
 Peer dependencies: `react >= 18`, `react-dom >= 18`, `framer-motion >= 11`
@@ -15,8 +15,8 @@ Peer dependencies: `react >= 18`, `react-dom >= 18`, `framer-motion >= 11`
 ## Quick Start
 
 ```tsx
-import { OSShell, useColorScheme } from 'deskui'
-import type { AppDefinition } from 'deskui'
+import { OSShell, useColorScheme } from 'deskui-react'
+import type { AppDefinition } from 'deskui-react'
 
 const apps: AppDefinition[] = [
   {

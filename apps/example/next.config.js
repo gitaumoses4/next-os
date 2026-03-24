@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  transpilePackages: ['deskui'],
+  transpilePackages: ['deskui-react'],
 }
 
 module.exports = nextConfig

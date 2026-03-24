@@ -1,7 +1,7 @@
 'use client'
 
-import { OSShell, useColorScheme } from 'deskui'
-import type { AppDefinition } from 'deskui'
+import { OSShell, useColorScheme } from 'deskui-react'
+import type { AppDefinition } from 'deskui-react'
 import {
   HiOutlineChartBarSquare,
   HiOutlineChartPie,

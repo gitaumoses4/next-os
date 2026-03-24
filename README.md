@@ -29,7 +29,7 @@ A desktop OS shell for your web app. Drop it in and your product gets windows, a
 ## Installation
 
 ```bash
-npm install deskui
+npm install deskui-react
 ```
 
 Peer dependencies: `react >= 18`, `react-dom >= 18`, `framer-motion >= 11`
@@ -37,8 +37,8 @@ Peer dependencies: `react >= 18`, `react-dom >= 18`, `framer-motion >= 11`
 ## Quick Start
 
 ```tsx
-import { OSShell, useColorScheme } from 'deskui'
-import type { AppDefinition } from 'deskui'
+import { OSShell, useColorScheme } from 'deskui-react'
+import type { AppDefinition } from 'deskui-react'
 
 const apps: AppDefinition[] = [
   {
@@ -123,7 +123,7 @@ interface AppDefinition {
 Runtime light/dark switching with system preference detection:
 
 ```tsx
-import { useColorScheme } from 'deskui'
+import { useColorScheme } from 'deskui-react'
 
 const { theme, colorScheme, setColorScheme, toggle } = useColorScheme({
   defaultScheme: 'system',  // 'light' | 'dark' | 'system'
@@ -140,7 +140,7 @@ const { theme, colorScheme, setColorScheme, toggle } = useColorScheme({
 ## Themes
 
 ```tsx
-import { defaultTheme, defaultDarkTheme } from 'deskui'
+import { defaultTheme, defaultDarkTheme } from 'deskui-react'
 
 <OSShell theme={defaultTheme} />     // Light
 <OSShell theme={defaultDarkTheme} /> // Dark
