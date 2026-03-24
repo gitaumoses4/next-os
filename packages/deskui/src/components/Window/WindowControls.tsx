@@ -4,36 +4,54 @@ import { useState } from 'react'
 import { useOSStore } from '@/store/windowStore'
 import { useOSContext } from '@/context/OSContext'
 import { useReservedSpace } from '@/hooks/useReservedSpace'
+import type { AppDefinition } from '@/types'
 
 interface WindowControlsProps {
   windowId: string
+  app: AppDefinition
 }
 
-export function WindowControls({ windowId }: WindowControlsProps) {
+export function WindowControls({ windowId, app }: WindowControlsProps) {
   const { theme } = useOSContext()
   const { controlStyle, controlsPosition } = theme.windowChrome
-  const closeWindow = useOSStore((s) => s.closeWindow)
+  const requestClose = useOSStore((s) => s.requestClose)
   const minimizeWindow = useOSStore((s) => s.minimizeWindow)
   const maximizeWindow = useOSStore((s) => s.maximizeWindow)
   const restoreWindow = useOSStore((s) => s.restoreWindow)
   const win = useOSStore((s) => s.windows[windowId])
   const isMaximized = win?.status === 'maximized'
+  const isFocused = win?.isFocused ?? false
   const reservedSpace = useReservedSpace()
 
-  const toggleMaximize = () => {
-    if (isMaximized) {
-      restoreWindow(windowId)
-    } else {
-      maximizeWindow(windowId, reservedSpace)
-    }
+  const onClose = () => requestClose(windowId)
+  const onMinimize = () => minimizeWindow(windowId)
+  const onMaximize = () => maximizeWindow(windowId, reservedSpace)
+  const onRestore = () => restoreWindow(windowId)
+  const toggleMaximize = () => (isMaximized ? onRestore() : onMaximize())
+
+  // Custom controls render prop
+  if (app.renderControls) {
+    return (
+      <>
+        {app.renderControls({
+          windowId,
+          isFocused,
+          isMaximized,
+          onClose,
+          onMinimize,
+          onMaximize,
+          onRestore,
+        })}
+      </>
+    )
   }
 
   if (controlStyle === 'traffic-lights') {
     return (
       <TrafficLights
         position={controlsPosition}
-        onClose={() => closeWindow(windowId)}
-        onMinimize={() => minimizeWindow(windowId)}
+        onClose={onClose}
+        onMinimize={onMinimize}
         onMaximize={toggleMaximize}
       />
     )
@@ -43,8 +61,8 @@ export function WindowControls({ windowId }: WindowControlsProps) {
     <Squares
       position={controlsPosition}
       isMaximized={isMaximized}
-      onClose={() => closeWindow(windowId)}
-      onMinimize={() => minimizeWindow(windowId)}
+      onClose={onClose}
+      onMinimize={onMinimize}
       onMaximize={toggleMaximize}
     />
   )
@@ -76,7 +94,6 @@ function TrafficLights({ position, onClose, onMinimize, onMaximize }: TrafficLig
     lineHeight: 1,
     color: 'transparent',
     padding: 0,
-    // Larger hit area via transparent outline
     outline: '4px solid transparent',
   }
 
