@@ -23,11 +23,12 @@ export function Window({ windowId }: WindowProps) {
   const app = apps.find((a) => a.id === win.appId)
   if (!app) return null
 
-  const isResizable = app.resizable !== false && win.status !== 'maximized'
+  const isResizable = app.resizable !== false && win.status !== 'maximized' && !win.isPip
   const { windowChrome } = theme
   const isFocused = win.isFocused
 
   const isMaximized = win.status === 'maximized'
+  const isPip = win.isPip
 
   return (
     <motion.div
@@ -88,7 +89,7 @@ export function Window({ windowId }: WindowProps) {
         transition: 'filter 0.2s ease, box-shadow 0.25s ease',
       }}
     >
-      <WindowTitlebar windowId={windowId} app={app} />
+      {!isPip && <WindowTitlebar windowId={windowId} app={app} />}
       <WindowContent route={app.route} skeleton={app.skeleton} />
       {/* Transparent overlay to capture clicks when unfocused (iframe swallows pointer events) */}
       {!isFocused && (

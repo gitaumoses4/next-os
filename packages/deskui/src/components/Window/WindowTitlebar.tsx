@@ -24,6 +24,7 @@ export function WindowTitlebar({ windowId, app }: WindowTitlebarProps) {
   const minimizeWindow = useOSStore((s) => s.minimizeWindow)
   const requestClose = useOSStore((s) => s.requestClose)
   const moveWindow = useOSStore((s) => s.moveWindow)
+  const togglePip = useOSStore((s) => s.togglePip)
   const [contextMenuPos, setContextMenuPos] = useState<{ x: number; y: number } | null>(null)
 
   const { titlebarHeight, titlebarBg, titlebarBgUnfocused, titlebarTextColor, controlsPosition } =
@@ -68,6 +69,10 @@ export function WindowTitlebar({ windowId, app }: WindowTitlebarProps) {
           })
         }
       },
+    },
+    {
+      label: win?.isPip ? 'Exit Picture in Picture' : 'Picture in Picture',
+      action: () => togglePip(windowId),
     },
     { separator: true, label: '' },
     { label: 'Close', shortcut: '⌘W', danger: true, action: onClose },

@@ -8,7 +8,7 @@ export interface OSContextValue {
   apps: AppDefinition[]
   theme: OSTheme
   taskbarVariant: 'dock' | 'taskbar'
-  wallpaper?: string
+  wallpaper?: string | string[] | (() => string)
   onWindowOpen?: (appId: string) => void
   onWindowClose?: (windowId: string) => void
   onWindowFocus?: (windowId: string) => void

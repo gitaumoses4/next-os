@@ -30,7 +30,7 @@ const STORAGE_KEY = 'deskui-mode'
 export interface OSShellProps {
   apps: AppDefinition[]
   theme?: OSTheme | DeepPartial<OSTheme>
-  wallpaper?: string
+  wallpaper?: string | string[] | (() => string)
   taskbarVariant?: 'dock' | 'taskbar'
   dockItems?: DockEntry[]
   initialWindows?: string[]

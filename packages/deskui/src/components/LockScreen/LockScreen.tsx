@@ -71,14 +71,21 @@ export function LockScreen({ idleTimeout }: LockScreenProps) {
     return () => window.removeEventListener('keydown', handler)
   }, [lock])
 
-  const wallpaperStyle: React.CSSProperties = wallpaper
-    ? wallpaper.startsWith('http') || wallpaper.startsWith('/')
+  const resolvedWp =
+    typeof wallpaper === 'function'
+      ? wallpaper()
+      : Array.isArray(wallpaper)
+        ? wallpaper[0]
+        : wallpaper
+
+  const wallpaperStyle: React.CSSProperties = resolvedWp
+    ? resolvedWp.startsWith('http') || resolvedWp.startsWith('/')
       ? {
-          backgroundImage: `url(${wallpaper})`,
+          backgroundImage: `url(${resolvedWp})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
         }
-      : { background: wallpaper }
+      : { background: resolvedWp }
     : { background: theme.desktop.defaultWallpaper }
 
   return (

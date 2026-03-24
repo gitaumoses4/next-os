@@ -1,11 +1,31 @@
 'use client'
 
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect, useRef } from 'react'
 import { useOSContext } from '@/context/OSContext'
 import { useOSStore } from '@/store/windowStore'
 import { DesktopIcon } from './DesktopIcon'
 import { ContextMenu } from '@/components/ContextMenu'
 import type { ContextMenuItem } from '@/components/ContextMenu'
+
+const SLIDESHOW_INTERVAL = 30_000
+
+function resolveWallpaper(
+  wallpaper: string | string[] | (() => string) | undefined,
+  index: number,
+): string | undefined {
+  if (!wallpaper) return undefined
+  if (typeof wallpaper === 'function') return wallpaper()
+  if (Array.isArray(wallpaper)) return wallpaper[index % wallpaper.length]
+  return wallpaper
+}
+
+function wallpaperToStyle(wp: string | undefined, fallback: string): React.CSSProperties {
+  if (!wp) return { background: fallback }
+  if (wp.startsWith('http') || wp.startsWith('/')) {
+    return { backgroundImage: `url(${wp})`, backgroundSize: 'cover', backgroundPosition: 'center' }
+  }
+  return { background: wp }
+}
 
 export function Desktop() {
   const { apps, theme, wallpaper, taskbarVariant } = useOSContext()
@@ -14,17 +34,26 @@ export function Desktop() {
   const openWindow = useOSStore((s) => s.openWindow)
   const [selectedAppId, setSelectedAppId] = useState<string | null>(null)
   const [contextMenuPos, setContextMenuPos] = useState<{ x: number; y: number } | null>(null)
+  const [wpIndex, setWpIndex] = useState(0)
+  const [fading, setFading] = useState(false)
+  const prevWpRef = useRef<string | undefined>(undefined)
   const { gridGap, gridPadding } = theme.desktop
 
-  const wallpaperStyle: React.CSSProperties = wallpaper
-    ? wallpaper.startsWith('http') || wallpaper.startsWith('/')
-      ? {
-          backgroundImage: `url(${wallpaper})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-        }
-      : { background: wallpaper }
-    : { background: theme.desktop.defaultWallpaper }
+  // Slideshow rotation for array wallpapers
+  useEffect(() => {
+    if (!Array.isArray(wallpaper) || wallpaper.length <= 1) return
+    const interval = setInterval(() => {
+      setFading(true)
+      setTimeout(() => {
+        setWpIndex((i) => (i + 1) % wallpaper.length)
+        setFading(false)
+      }, 500)
+    }, SLIDESHOW_INTERVAL)
+    return () => clearInterval(interval)
+  }, [wallpaper])
+
+  const currentWp = resolveWallpaper(wallpaper, wpIndex)
+  const wallpaperStyle = wallpaperToStyle(currentWp, theme.desktop.defaultWallpaper)
 
   const onDesktopClick = useCallback(
     (e: React.MouseEvent) => {
@@ -67,6 +96,8 @@ export function Desktop() {
         paddingTop:
           taskbarVariant === 'dock' ? theme.menuBar.height + parseInt(gridPadding) : gridPadding,
         ...wallpaperStyle,
+        transition: 'background 0.5s ease, background-image 0.5s ease',
+        opacity: fading ? 0.8 : 1,
       }}
     >
       <div

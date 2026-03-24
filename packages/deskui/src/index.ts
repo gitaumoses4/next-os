@@ -22,6 +22,7 @@ export { useNotification } from './hooks/useNotification'
 export { useDesktop } from './hooks/useDesktop'
 export { useWindowEvents } from './hooks/useWindowEvents'
 export { useOSEvents } from './hooks/useOSEvents'
+export { useGlassStyle } from './hooks/useGlassStyle'
 
 // Context
 export { useOSContext } from './context/OSContext'

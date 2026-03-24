@@ -14,9 +14,14 @@ export interface WindowState {
   zIndex: number
   isFocused: boolean
   isAnimating: boolean
+  isPip: boolean
+  prePipPosition: { x: number; y: number } | null
+  prePipSize: { w: number; h: number } | null
 }
 
 const BASE_Z = 100
+const PIP_Z = 9000
+const PIP_SIZE = { w: 320, h: 200 }
 
 export type SnapZone =
   | 'left'
@@ -65,6 +70,7 @@ export interface OSStore {
   resizeWindow: (windowId: string, size: { w: number; h: number }) => void
   blurAll: () => void
   showDesktop: () => void
+  togglePip: (windowId: string) => void
 }
 
 function deriveZIndexes(
@@ -214,6 +220,9 @@ export const useOSStore = create<OSStore>((set, get) => ({
       zIndex: 0,
       isFocused: false,
       isAnimating: false,
+      isPip: false,
+      prePipPosition: null,
+      prePipSize: null,
     }
 
     const newZStack = [...state.zStack, windowId]
@@ -347,6 +356,47 @@ export const useOSStore = create<OSStore>((set, get) => ({
         [windowId]: { ...win, size },
       },
     })
+  },
+
+  togglePip: (windowId) => {
+    const state = get()
+    const win = state.windows[windowId]
+    if (!win) return
+
+    if (win.isPip) {
+      // Exit PiP — restore original position/size
+      set({
+        windows: {
+          ...state.windows,
+          [windowId]: {
+            ...win,
+            isPip: false,
+            position: win.prePipPosition ?? win.position,
+            size: win.prePipSize ?? win.size,
+            zIndex: BASE_Z + state.zStack.indexOf(windowId),
+            prePipPosition: null,
+            prePipSize: null,
+          },
+        },
+      })
+    } else {
+      // Enter PiP — shrink and pin to corner
+      set({
+        windows: {
+          ...state.windows,
+          [windowId]: {
+            ...win,
+            isPip: true,
+            prePipPosition: { ...win.position },
+            prePipSize: { ...win.size },
+            position: { x: window.innerWidth - PIP_SIZE.w - 16, y: 16 },
+            size: PIP_SIZE,
+            zIndex: PIP_Z,
+            isFocused: false,
+          },
+        },
+      })
+    }
   },
 
   blurAll: () => {
