@@ -32,7 +32,6 @@ function clampToViewport(x: number, y: number, el: HTMLElement | null) {
 
 export function ContextMenu({ items, position, onClose, theme: cm }: ContextMenuProps) {
   const menuRef = useRef<HTMLDivElement>(null)
-  const cleanupRef = useRef<(() => void) | null>(null)
   const [selectedIndex, setSelectedIndex] = useState(-1)
   const [clamped, setClamped] = useState<{ x: number; y: number } | null>(null)
 
@@ -50,34 +49,7 @@ export function ContextMenu({ items, position, onClose, theme: cm }: ContextMenu
     setSelectedIndex(-1)
   }, [position])
 
-  // Close on click outside, right-click outside, or scroll
-  useEffect(() => {
-    if (!position) return
-
-    // Small delay to avoid closing from the same event that opened the menu
-    const timer = setTimeout(() => {
-      const handleClose = (e: Event) => {
-        if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
-          onClose()
-        }
-      }
-      window.addEventListener('mousedown', handleClose, true)
-      window.addEventListener('contextmenu', handleClose, true)
-      window.addEventListener('scroll', onClose, true)
-
-      cleanupRef.current = () => {
-        window.removeEventListener('mousedown', handleClose, true)
-        window.removeEventListener('contextmenu', handleClose, true)
-        window.removeEventListener('scroll', onClose, true)
-      }
-    }, 0)
-
-    return () => {
-      clearTimeout(timer)
-      cleanupRef.current?.()
-      cleanupRef.current = null
-    }
-  }, [position, onClose])
+  // Close on Escape (keyboard handler below covers navigation + Escape)
 
   // Keyboard navigation
   useEffect(() => {
@@ -117,88 +89,103 @@ export function ContextMenu({ items, position, onClose, theme: cm }: ContextMenu
   const menu = (
     <AnimatePresence>
       {position && (
-        <motion.div
-          ref={menuRef}
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{
-            opacity: 1,
-            scale: 1,
-            left: displayPos?.x,
-            top: displayPos?.y,
-          }}
-          exit={{ opacity: 0, scale: 0.95 }}
-          transition={{ duration: 0.1 }}
-          style={{
-            position: 'fixed',
-            left: displayPos?.x,
-            top: displayPos?.y,
-            zIndex: 9997,
-            minWidth: 200,
-            background: cm.bg,
-            backdropFilter: cm.blur,
-            WebkitBackdropFilter: cm.blur,
-            border: cm.border,
-            borderRadius: cm.borderRadius,
-            boxShadow: cm.shadow,
-            padding: '4px 0',
-            overflow: 'hidden',
-            transformOrigin: 'top left',
-          }}
-        >
-          {items.map((item, i) =>
-            item.separator ? (
-              <div
-                key={`sep-${i}`}
-                style={{
-                  height: 1,
-                  background: cm.separatorColor,
-                  margin: '4px 8px',
-                }}
-              />
-            ) : (
-              <button
-                key={`${item.label}-${i}`}
-                onClick={() => {
-                  if (!item.disabled && item.action) {
-                    item.action()
-                    onClose()
-                  }
-                }}
-                onMouseEnter={() => !item.disabled && setSelectedIndex(i)}
-                onMouseLeave={() => setSelectedIndex(-1)}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  width: '100%',
-                  padding: '6px 14px',
-                  border: 'none',
-                  background:
-                    i === selectedIndex
-                      ? item.danger
-                        ? cm.dangerHoverBg
-                        : cm.itemHoverBg
-                      : 'transparent',
-                  color: item.disabled
-                    ? cm.itemDisabledColor
-                    : item.danger
-                      ? cm.dangerColor
-                      : i === selectedIndex
-                        ? cm.itemHoverColor
-                        : cm.itemColor,
-                  fontSize: 13,
-                  textAlign: 'left',
-                  cursor: item.disabled ? 'default' : 'pointer',
-                  gap: 8,
-                }}
-              >
-                <span style={{ flex: 1 }}>{item.label}</span>
-                {item.shortcut && (
-                  <span style={{ fontSize: 11, color: cm.shortcutColor }}>{item.shortcut}</span>
-                )}
-              </button>
-            ),
-          )}
-        </motion.div>
+        <>
+          {/* Invisible backdrop to catch clicks/right-clicks anywhere */}
+          <div
+            onClick={onClose}
+            onContextMenu={(e) => {
+              e.preventDefault()
+              onClose()
+            }}
+            style={{
+              position: 'fixed',
+              inset: 0,
+              zIndex: 9996,
+            }}
+          />
+          <motion.div
+            ref={menuRef}
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{
+              opacity: 1,
+              scale: 1,
+              left: displayPos?.x,
+              top: displayPos?.y,
+            }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            transition={{ duration: 0.1 }}
+            style={{
+              position: 'fixed',
+              left: displayPos?.x,
+              top: displayPos?.y,
+              zIndex: 9997,
+              minWidth: 200,
+              background: cm.bg,
+              backdropFilter: cm.blur,
+              WebkitBackdropFilter: cm.blur,
+              border: cm.border,
+              borderRadius: cm.borderRadius,
+              boxShadow: cm.shadow,
+              padding: '4px 0',
+              overflow: 'hidden',
+              transformOrigin: 'top left',
+            }}
+          >
+            {items.map((item, i) =>
+              item.separator ? (
+                <div
+                  key={`sep-${i}`}
+                  style={{
+                    height: 1,
+                    background: cm.separatorColor,
+                    margin: '4px 8px',
+                  }}
+                />
+              ) : (
+                <button
+                  key={`${item.label}-${i}`}
+                  onClick={() => {
+                    if (!item.disabled && item.action) {
+                      item.action()
+                      onClose()
+                    }
+                  }}
+                  onMouseEnter={() => !item.disabled && setSelectedIndex(i)}
+                  onMouseLeave={() => setSelectedIndex(-1)}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    width: '100%',
+                    padding: '6px 14px',
+                    border: 'none',
+                    background:
+                      i === selectedIndex
+                        ? item.danger
+                          ? cm.dangerHoverBg
+                          : cm.itemHoverBg
+                        : 'transparent',
+                    color: item.disabled
+                      ? cm.itemDisabledColor
+                      : item.danger
+                        ? cm.dangerColor
+                        : i === selectedIndex
+                          ? cm.itemHoverColor
+                          : cm.itemColor,
+                    fontSize: 13,
+                    textAlign: 'left',
+                    cursor: item.disabled ? 'default' : 'pointer',
+                    gap: 8,
+                  }}
+                >
+                  <span style={{ flex: 1 }}>{item.label}</span>
+                  {item.shortcut && (
+                    <span style={{ fontSize: 11, color: cm.shortcutColor }}>{item.shortcut}</span>
+                  )}
+                </button>
+              ),
+            )}
+          </motion.div>
+        </>
       )}
     </AnimatePresence>
   )
