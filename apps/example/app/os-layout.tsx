@@ -1,6 +1,6 @@
 'use client'
 
-import { OSShell } from 'deskui'
+import { defaultDarkTheme, OSShell } from 'deskui'
 import type { AppDefinition } from 'deskui'
 import {
   HiOutlineChartBarSquare,
@@ -124,7 +124,8 @@ export function OSLayout({ children }: { children: React.ReactNode }) {
     <OSShell
       apps={apps}
       wallpaper="linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%)"
-      taskbarVariant="dock"
+      taskbarVariant="taskbar"
+      theme={defaultDarkTheme}
       initialWindows={['dashboard']}
     >
       {children}

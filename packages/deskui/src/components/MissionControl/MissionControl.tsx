@@ -134,7 +134,7 @@ export function MissionControl() {
                   <span
                     style={{
                       fontSize: 11,
-                      color: cp.itemColor,
+                      color: theme.desktop.iconLabelColor,
                       fontWeight: 500,
                       textAlign: 'center',
                       overflow: 'hidden',
@@ -151,7 +151,7 @@ export function MissionControl() {
           </div>
 
           {visibleWindows.length === 0 && (
-            <span style={{ color: cp.hintColor, fontSize: 14 }}>No open windows</span>
+            <span style={{ color: 'rgba(255, 255, 255, 0.5)', fontSize: 14 }}>No open windows</span>
           )}
         </motion.div>
       )}

@@ -45,11 +45,11 @@ const maxBar = Math.max(...barData.map((d) => d.value))
 
 export default function Analytics() {
   return (
-    <div className="min-h-screen bg-slate-50/50 p-6">
+    <div className="min-h-screen bg-default-50 p-6">
       <div className="mb-6 flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Analytics</h1>
-          <p className="text-sm text-slate-500">Traffic &amp; engagement</p>
+          <h1 className="text-2xl font-bold text-foreground">Analytics</h1>
+          <p className="text-sm text-default-500">Traffic &amp; engagement</p>
         </div>
         <Tabs size="sm" variant="bordered">
           <Tab key="7d" title="7 days" />
@@ -60,11 +60,11 @@ export default function Analytics() {
 
       <div className="mb-6 grid grid-cols-2 gap-4 lg:grid-cols-4">
         {metrics.map((m) => (
-          <Card key={m.label} className="border border-slate-200 shadow-sm">
+          <Card key={m.label} className="border border-divider shadow-sm">
             <CardBody className="gap-1 p-4">
-              <span className="text-xs font-medium text-slate-500">{m.label}</span>
+              <span className="text-xs font-medium text-default-500">{m.label}</span>
               <div className="flex items-end gap-2">
-                <span className="text-xl font-bold text-slate-900">{m.value}</span>
+                <span className="text-xl font-bold text-foreground">{m.value}</span>
                 <Chip size="sm" variant="flat" color={m.positive ? 'success' : 'danger'}>
                   {m.change}
                 </Chip>
@@ -75,9 +75,9 @@ export default function Analytics() {
       </div>
 
       <div className="mb-6 grid grid-cols-1 gap-4 lg:grid-cols-3">
-        <Card className="border border-slate-200 shadow-sm lg:col-span-2">
+        <Card className="border border-divider shadow-sm lg:col-span-2">
           <CardHeader className="flex-col items-start px-4 pb-0 pt-4">
-            <h3 className="text-sm font-semibold text-slate-900">Weekly Traffic</h3>
+            <h3 className="text-sm font-semibold text-foreground">Weekly Traffic</h3>
           </CardHeader>
           <CardBody className="px-4 pb-4 pt-6">
             <div className="flex items-end gap-3" style={{ height: 180 }}>
@@ -89,16 +89,16 @@ export default function Analytics() {
                       style={{ height: `${(d.value / maxBar) * 150}px` }}
                     />
                   </div>
-                  <span className="text-xs text-slate-500">{d.day}</span>
+                  <span className="text-xs text-default-500">{d.day}</span>
                 </div>
               ))}
             </div>
           </CardBody>
         </Card>
 
-        <Card className="border border-slate-200 shadow-sm">
+        <Card className="border border-divider shadow-sm">
           <CardHeader className="flex-col items-start px-4 pb-0 pt-4">
-            <h3 className="text-sm font-semibold text-slate-900">Devices</h3>
+            <h3 className="text-sm font-semibold text-foreground">Devices</h3>
           </CardHeader>
           <CardBody className="flex flex-col justify-center gap-4 px-4">
             {[
@@ -108,17 +108,17 @@ export default function Analytics() {
             ].map((d) => (
               <div key={d.label} className="flex items-center gap-3">
                 <div className={`h-3 w-3 rounded-full ${d.color}`} />
-                <span className="flex-1 text-sm text-slate-700">{d.label}</span>
-                <span className="text-sm font-semibold text-slate-900">{d.pct}%</span>
+                <span className="flex-1 text-sm text-foreground/80">{d.label}</span>
+                <span className="text-sm font-semibold text-foreground">{d.pct}%</span>
               </div>
             ))}
           </CardBody>
         </Card>
       </div>
 
-      <Card className="border border-slate-200 shadow-sm">
+      <Card className="border border-divider shadow-sm">
         <CardHeader className="flex-col items-start px-4 pb-0 pt-4">
-          <h3 className="text-sm font-semibold text-slate-900">Top Referrers</h3>
+          <h3 className="text-sm font-semibold text-foreground">Top Referrers</h3>
         </CardHeader>
         <CardBody className="px-0 py-0">
           <Table removeWrapper aria-label="Top referrers" className="min-w-full">

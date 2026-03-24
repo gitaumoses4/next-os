@@ -68,18 +68,18 @@ export default function Notes() {
   }
 
   return (
-    <div className="flex h-screen bg-white">
+    <div className="flex h-screen bg-content1">
       {/* Sidebar */}
-      <div className="flex w-64 shrink-0 flex-col border-r border-slate-200 bg-slate-50">
-        <div className="flex items-center gap-2 border-b border-slate-200 p-3">
+      <div className="flex w-64 shrink-0 flex-col border-r border-divider bg-default-50">
+        <div className="flex items-center gap-2 border-b border-divider p-3">
           <Input
             size="sm"
             placeholder="Search notes..."
             value={search}
             onValueChange={setSearch}
-            startContent={<HiOutlineMagnifyingGlass className="h-4 w-4 text-slate-400" />}
+            startContent={<HiOutlineMagnifyingGlass className="h-4 w-4 text-default-400" />}
             classNames={{
-              inputWrapper: 'bg-white border border-slate-200 shadow-none',
+              inputWrapper: 'bg-content1 border border-divider shadow-none',
             }}
           />
           <Button isIconOnly size="sm" variant="flat" onPress={addNote} className="shrink-0">
@@ -91,12 +91,14 @@ export default function Notes() {
             <button
               key={note.id}
               onClick={() => setSelected(note.id)}
-              className={`group w-full border-b border-slate-100 px-4 py-3 text-left transition-colors ${
-                selected === note.id ? 'bg-primary-50' : 'hover:bg-slate-100'
+              className={`group w-full border-b border-divider/50 px-4 py-3 text-left transition-colors ${
+                selected === note.id ? 'bg-primary-50' : 'hover:bg-default-100'
               }`}
             >
               <div className="flex items-start justify-between">
-                <span className="truncate text-sm font-semibold text-slate-800">{note.title}</span>
+                <span className="truncate text-sm font-semibold text-foreground/90">
+                  {note.title}
+                </span>
                 <button
                   onClick={(e) => {
                     e.stopPropagation()
@@ -104,17 +106,17 @@ export default function Notes() {
                   }}
                   className="ml-2 shrink-0 opacity-0 transition-opacity group-hover:opacity-100"
                 >
-                  <HiOutlineTrash className="h-3.5 w-3.5 text-slate-400 hover:text-red-500" />
+                  <HiOutlineTrash className="h-3.5 w-3.5 text-default-400 hover:text-red-500" />
                 </button>
               </div>
-              <p className="mt-0.5 truncate text-xs text-slate-500">
+              <p className="mt-0.5 truncate text-xs text-default-500">
                 {note.body.split('\n')[0] || 'Empty note'}
               </p>
-              <p className="mt-1 text-[11px] text-slate-400">{note.updated}</p>
+              <p className="mt-1 text-[11px] text-default-400">{note.updated}</p>
             </button>
           ))}
           {filtered.length === 0 && (
-            <div className="p-4 text-center text-sm text-slate-400">No notes found</div>
+            <div className="p-4 text-center text-sm text-default-400">No notes found</div>
           )}
         </div>
       </div>
@@ -130,7 +132,7 @@ export default function Notes() {
                   prev.map((n) => (n.id === selected ? { ...n, title: e.target.value } : n)),
                 )
               }
-              className="border-b border-slate-200 px-6 py-4 text-xl font-bold text-slate-900 outline-none placeholder:text-slate-300"
+              className="border-b border-divider bg-transparent px-6 py-4 text-xl font-bold text-foreground outline-none placeholder:text-default-300"
               placeholder="Note title"
             />
             <textarea
@@ -140,12 +142,12 @@ export default function Notes() {
                   prev.map((n) => (n.id === selected ? { ...n, body: e.target.value } : n)),
                 )
               }
-              className="flex-1 resize-none px-6 py-4 text-sm leading-relaxed text-slate-700 outline-none placeholder:text-slate-300"
+              className="flex-1 resize-none bg-transparent px-6 py-4 text-sm leading-relaxed text-foreground/80 outline-none placeholder:text-default-300"
               placeholder="Start writing..."
             />
           </>
         ) : (
-          <div className="flex flex-1 items-center justify-center text-sm text-slate-400">
+          <div className="flex flex-1 items-center justify-center text-sm text-default-400">
             Select a note or create a new one
           </div>
         )}

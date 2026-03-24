@@ -41,7 +41,9 @@ export interface OSStore {
   draggingWindowId: string | null
   snapPreview: SnapZone
   missionControlActive: boolean
+  shakeWindowId: string | null
   toggleMissionControl: () => void
+  shakeWindow: (windowId: string) => void
   setDragging: (windowId: string | null) => void
   setSnapPreview: (zone: SnapZone) => void
   setBadge: (appId: string, count: number) => void
@@ -107,8 +109,13 @@ export const useOSStore = create<OSStore>((set, get) => ({
   draggingWindowId: null,
   snapPreview: null,
   missionControlActive: false,
+  shakeWindowId: null,
   toggleMissionControl: () =>
     set((state) => ({ missionControlActive: !state.missionControlActive })),
+  shakeWindow: (windowId) => {
+    set({ shakeWindowId: windowId })
+    setTimeout(() => set({ shakeWindowId: null }), 500)
+  },
   beforeCloseHandlers: {},
   registerBeforeClose: (appId, handler) =>
     set((state) => ({

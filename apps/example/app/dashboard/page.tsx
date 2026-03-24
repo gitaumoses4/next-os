@@ -15,7 +15,7 @@ const stats = [
     change: '+14.2%',
     positive: true,
     icon: HiOutlineUsers,
-    color: 'text-blue-600 bg-blue-50',
+    color: 'text-blue-600 bg-blue-50 dark:bg-blue-500/10',
   },
   {
     label: 'Revenue',
@@ -23,7 +23,7 @@ const stats = [
     change: '+8.1%',
     positive: true,
     icon: HiOutlineCurrencyDollar,
-    color: 'text-emerald-600 bg-emerald-50',
+    color: 'text-emerald-600 bg-emerald-50 dark:bg-emerald-500/10',
   },
   {
     label: 'Active Now',
@@ -31,7 +31,7 @@ const stats = [
     change: '+23.5%',
     positive: true,
     icon: HiOutlineBolt,
-    color: 'text-amber-600 bg-amber-50',
+    color: 'text-amber-600 bg-amber-50 dark:bg-amber-500/10',
   },
   {
     label: 'Conversion',
@@ -39,7 +39,7 @@ const stats = [
     change: '-2.1%',
     positive: false,
     icon: HiOutlineArrowTrendingUp,
-    color: 'text-violet-600 bg-violet-50',
+    color: 'text-violet-600 bg-violet-50 dark:bg-violet-500/10',
   },
 ]
 
@@ -61,18 +61,18 @@ const topPages = [
 
 export default function Dashboard() {
   return (
-    <div className="min-h-screen bg-slate-50/50 p-6">
+    <div className="min-h-screen bg-default-50 p-6">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-slate-900">Dashboard</h1>
-        <p className="text-sm text-slate-500">Overview of your workspace activity</p>
+        <h1 className="text-2xl font-bold text-foreground">Dashboard</h1>
+        <p className="text-sm text-default-500">Overview of your workspace activity</p>
       </div>
 
       <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {stats.map((stat) => (
-          <Card key={stat.label} className="border border-slate-200 shadow-sm">
+          <Card key={stat.label} className="border border-divider shadow-sm">
             <CardBody className="gap-2 p-4">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-medium text-slate-500">{stat.label}</span>
+                <span className="text-xs font-medium text-default-500">{stat.label}</span>
                 <div
                   className={`${stat.color} flex h-8 w-8 items-center justify-center rounded-lg`}
                 >
@@ -80,7 +80,7 @@ export default function Dashboard() {
                 </div>
               </div>
               <div className="flex items-end gap-2">
-                <span className="text-2xl font-bold text-slate-900">{stat.value}</span>
+                <span className="text-2xl font-bold text-foreground">{stat.value}</span>
                 <Chip
                   size="sm"
                   variant="flat"
@@ -96,9 +96,9 @@ export default function Dashboard() {
       </div>
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-5">
-        <Card className="border border-slate-200 shadow-sm lg:col-span-3">
+        <Card className="border border-divider shadow-sm lg:col-span-3">
           <CardHeader className="flex-col items-start px-4 pb-0 pt-4">
-            <h3 className="text-sm font-semibold text-slate-900">Recent Activity</h3>
+            <h3 className="text-sm font-semibold text-foreground">Recent Activity</h3>
           </CardHeader>
           <CardBody className="px-4 py-3">
             <div className="flex flex-col gap-0">
@@ -108,13 +108,13 @@ export default function Dashboard() {
                     <Avatar
                       name={item.avatar}
                       size="sm"
-                      className="shrink-0 bg-slate-200 text-xs text-slate-600"
+                      className="shrink-0 bg-default-100 text-xs text-default-600"
                     />
                     <div className="min-w-0 flex-1">
-                      <p className="text-sm font-medium text-slate-900">{item.user}</p>
-                      <p className="truncate text-xs text-slate-500">{item.action}</p>
+                      <p className="text-sm font-medium text-foreground">{item.user}</p>
+                      <p className="truncate text-xs text-default-500">{item.action}</p>
                     </div>
-                    <span className="shrink-0 text-xs text-slate-400">{item.time}</span>
+                    <span className="shrink-0 text-xs text-default-400">{item.time}</span>
                   </div>
                   {i < recentActivity.length - 1 && <Divider />}
                 </div>
@@ -123,16 +123,16 @@ export default function Dashboard() {
           </CardBody>
         </Card>
 
-        <Card className="border border-slate-200 shadow-sm lg:col-span-2">
+        <Card className="border border-divider shadow-sm lg:col-span-2">
           <CardHeader className="flex-col items-start px-4 pb-0 pt-4">
-            <h3 className="text-sm font-semibold text-slate-900">Top Pages</h3>
+            <h3 className="text-sm font-semibold text-foreground">Top Pages</h3>
           </CardHeader>
           <CardBody className="gap-4 px-4 py-3">
             {topPages.map((page) => (
               <div key={page.page} className="flex flex-col gap-1.5">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-slate-700">{page.page}</span>
-                  <span className="text-xs font-medium text-slate-500">
+                  <span className="text-sm text-foreground/80">{page.page}</span>
+                  <span className="text-xs font-medium text-default-500">
                     {page.views.toLocaleString()}
                   </span>
                 </div>

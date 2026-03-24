@@ -207,7 +207,7 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
                     padding: '8px 16px',
                     border: 'none',
                     background: i === selectedIndex ? cp.itemHoverBg : 'transparent',
-                    color: cp.itemColor,
+                    color: i === selectedIndex ? '#ffffff' : cp.itemColor,
                     fontSize: 14,
                     textAlign: 'left',
                     cursor: 'pointer',

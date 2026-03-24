@@ -33,7 +33,7 @@ const iconMap = {
 
 const colorMap = {
   folder: 'text-blue-500',
-  document: 'text-slate-500',
+  document: 'text-default-500',
   image: 'text-rose-500',
   video: 'text-violet-500',
   audio: 'text-amber-500',
@@ -58,10 +58,10 @@ export default function Files() {
   const [view, setView] = useState<'grid' | 'list'>('list')
 
   return (
-    <div className="min-h-screen bg-slate-50/50 p-6">
+    <div className="min-h-screen bg-default-50 p-6">
       <div className="mb-4 flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Files</h1>
+          <h1 className="text-2xl font-bold text-foreground">Files</h1>
           <Breadcrumbs className="mt-1" size="sm">
             <BreadcrumbItem>Home</BreadcrumbItem>
             <BreadcrumbItem>My Files</BreadcrumbItem>
@@ -75,42 +75,42 @@ export default function Files() {
           >
             Upload
           </Button>
-          <div className="flex rounded-lg border border-slate-200">
+          <div className="flex rounded-lg border border-divider">
             <button
               onClick={() => setView('grid')}
               className={`rounded-l-lg p-1.5 ${
-                view === 'grid' ? 'bg-slate-200' : 'bg-white hover:bg-slate-50'
+                view === 'grid' ? 'bg-default-200' : 'bg-content1 hover:bg-default-50'
               }`}
             >
-              <HiOutlineSquares2X2 className="h-4 w-4 text-slate-600" />
+              <HiOutlineSquares2X2 className="h-4 w-4 text-foreground/70" />
             </button>
             <button
               onClick={() => setView('list')}
               className={`rounded-r-lg p-1.5 ${
-                view === 'list' ? 'bg-slate-200' : 'bg-white hover:bg-slate-50'
+                view === 'list' ? 'bg-default-200' : 'bg-content1 hover:bg-default-50'
               }`}
             >
-              <HiOutlineBars3 className="h-4 w-4 text-slate-600" />
+              <HiOutlineBars3 className="h-4 w-4 text-foreground/70" />
             </button>
           </div>
         </div>
       </div>
 
       {/* Storage bar */}
-      <Card className="mb-4 border border-slate-200 shadow-sm">
+      <Card className="mb-4 border border-divider shadow-sm">
         <CardBody className="flex-row items-center gap-4 p-3">
           <div className="flex-1">
             <Progress size="sm" value={68} color="primary" className="max-w-full" />
           </div>
-          <span className="shrink-0 text-xs text-slate-500">6.8 GB of 10 GB used</span>
+          <span className="shrink-0 text-xs text-default-500">6.8 GB of 10 GB used</span>
         </CardBody>
       </Card>
 
       {view === 'list' ? (
-        <Card className="border border-slate-200 shadow-sm">
+        <Card className="border border-divider shadow-sm">
           <CardBody className="p-0">
             {/* Header */}
-            <div className="grid grid-cols-12 gap-2 border-b border-slate-200 px-4 py-2 text-xs font-medium text-slate-500">
+            <div className="grid grid-cols-12 gap-2 border-b border-divider px-4 py-2 text-xs font-medium text-default-500">
               <div className="col-span-6">Name</div>
               <div className="col-span-2">Size</div>
               <div className="col-span-2">Modified</div>
@@ -121,16 +121,18 @@ export default function Files() {
               return (
                 <button
                   key={file.name}
-                  className="grid w-full grid-cols-12 items-center gap-2 border-b border-slate-50 px-4 py-2.5 text-left transition-colors last:border-0 hover:bg-slate-50"
+                  className="grid w-full grid-cols-12 items-center gap-2 border-b border-divider/50 px-4 py-2.5 text-left transition-colors last:border-0 hover:bg-default-50"
                 >
                   <div className="col-span-6 flex items-center gap-3">
                     <Icon className={`h-5 w-5 ${colorMap[file.type]}`} />
-                    <span className="truncate text-sm font-medium text-slate-800">{file.name}</span>
+                    <span className="truncate text-sm font-medium text-foreground/90">
+                      {file.name}
+                    </span>
                   </div>
-                  <div className="col-span-2 text-sm text-slate-500">
+                  <div className="col-span-2 text-sm text-default-500">
                     {file.size ?? `${file.items} items`}
                   </div>
-                  <div className="col-span-2 text-sm text-slate-500">{file.modified}</div>
+                  <div className="col-span-2 text-sm text-default-500">{file.modified}</div>
                   <div className="col-span-2">
                     <Chip size="sm" variant="flat" className="capitalize">
                       {file.type}
@@ -146,13 +148,13 @@ export default function Files() {
           {files.map((file) => {
             const Icon = iconMap[file.type]
             return (
-              <Card key={file.name} isPressable className="border border-slate-200 shadow-sm">
+              <Card key={file.name} isPressable className="border border-divider shadow-sm">
                 <CardBody className="flex flex-col items-center gap-2 p-4">
                   <Icon className={`h-10 w-10 ${colorMap[file.type]}`} />
-                  <span className="w-full truncate text-center text-sm font-medium text-slate-800">
+                  <span className="w-full truncate text-center text-sm font-medium text-foreground/90">
                     {file.name}
                   </span>
-                  <span className="text-xs text-slate-400">
+                  <span className="text-xs text-default-400">
                     {file.size ?? `${file.items} items`}
                   </span>
                 </CardBody>

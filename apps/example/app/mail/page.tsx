@@ -85,9 +85,9 @@ export default function Mail() {
   const current = emails.find((e) => e.id === selectedEmail)
 
   return (
-    <div className="flex h-screen bg-slate-50/50">
+    <div className="flex h-screen bg-default-50">
       {/* Sidebar */}
-      <div className="flex w-48 shrink-0 flex-col border-r border-slate-200 bg-white p-3">
+      <div className="flex w-48 shrink-0 flex-col border-r border-divider bg-content1 p-3">
         <Button color="primary" size="sm" className="mb-3 w-full font-medium">
           Compose
         </Button>
@@ -99,59 +99,59 @@ export default function Mail() {
               className={`flex items-center gap-2 rounded-lg px-3 py-2 text-left text-sm transition-colors ${
                 activeFolder === f.id
                   ? 'bg-primary-50 font-medium text-primary'
-                  : 'text-slate-600 hover:bg-slate-100'
+                  : 'text-foreground/70 hover:bg-default-100'
               }`}
             >
               <f.icon className="h-4 w-4" />
               <span className="flex-1">{f.label}</span>
-              {f.count > 0 && <span className="text-xs text-slate-400">{f.count}</span>}
+              {f.count > 0 && <span className="text-xs text-default-400">{f.count}</span>}
             </button>
           ))}
         </nav>
       </div>
 
       {/* Email list */}
-      <div className="flex w-72 shrink-0 flex-col border-r border-slate-200 bg-white">
-        <div className="border-b border-slate-200 px-4 py-3">
-          <h2 className="text-sm font-semibold text-slate-900">Inbox</h2>
+      <div className="flex w-72 shrink-0 flex-col border-r border-divider bg-content1">
+        <div className="border-b border-divider px-4 py-3">
+          <h2 className="text-sm font-semibold text-foreground">Inbox</h2>
         </div>
         <div className="flex-1 overflow-y-auto">
           {emails.map((email) => (
             <button
               key={email.id}
               onClick={() => setSelectedEmail(email.id)}
-              className={`w-full border-b border-slate-100 px-4 py-3 text-left transition-colors ${
-                selectedEmail === email.id ? 'bg-primary-50' : 'hover:bg-slate-50'
+              className={`w-full border-b border-divider/50 px-4 py-3 text-left transition-colors ${
+                selectedEmail === email.id ? 'bg-primary-50' : 'hover:bg-default-50'
               }`}
             >
               <div className="flex items-center gap-2">
                 <span
                   className={`flex-1 truncate text-sm ${
-                    email.unread ? 'font-semibold text-slate-900' : 'text-slate-700'
+                    email.unread ? 'font-semibold text-foreground' : 'text-foreground/80'
                   }`}
                 >
                   {email.from}
                 </span>
-                <span className="shrink-0 text-xs text-slate-400">{email.time}</span>
+                <span className="shrink-0 text-xs text-default-400">{email.time}</span>
               </div>
               <p
                 className={`mt-0.5 truncate text-sm ${
-                  email.unread ? 'font-medium text-slate-800' : 'text-slate-600'
+                  email.unread ? 'font-medium text-foreground/90' : 'text-foreground/70'
                 }`}
               >
                 {email.subject}
               </p>
-              <p className="mt-0.5 truncate text-xs text-slate-400">{email.preview}</p>
+              <p className="mt-0.5 truncate text-xs text-default-400">{email.preview}</p>
             </button>
           ))}
         </div>
       </div>
 
       {/* Email detail */}
-      <div className="flex flex-1 flex-col bg-white">
+      <div className="flex flex-1 flex-col bg-content1">
         {current ? (
           <>
-            <div className="flex items-center gap-2 border-b border-slate-200 px-6 py-3">
+            <div className="flex items-center gap-2 border-b border-divider px-6 py-3">
               <Button isIconOnly variant="light" size="sm">
                 <HiOutlineArchiveBox className="h-4 w-4" />
               </Button>
@@ -163,27 +163,27 @@ export default function Mail() {
               </Button>
             </div>
             <div className="flex-1 overflow-y-auto px-6 py-5">
-              <h2 className="text-lg font-semibold text-slate-900">{current.subject}</h2>
+              <h2 className="text-lg font-semibold text-foreground">{current.subject}</h2>
               <div className="mt-4 flex items-center gap-3">
                 <Avatar
                   name={current.avatar}
                   size="sm"
-                  className="bg-slate-200 text-xs text-slate-600"
+                  className="bg-default-100 text-xs text-default-600"
                 />
                 <div>
-                  <p className="text-sm font-medium text-slate-900">{current.from}</p>
-                  <p className="text-xs text-slate-400">{current.time}</p>
+                  <p className="text-sm font-medium text-foreground">{current.from}</p>
+                  <p className="text-xs text-default-400">{current.time}</p>
                 </div>
                 {current.starred && <HiOutlineStar className="ml-auto h-4 w-4 text-amber-400" />}
               </div>
               <Divider className="my-4" />
-              <div className="whitespace-pre-wrap text-sm leading-relaxed text-slate-700">
+              <div className="whitespace-pre-wrap text-sm leading-relaxed text-foreground/80">
                 {current.body}
               </div>
             </div>
           </>
         ) : (
-          <div className="flex flex-1 items-center justify-center text-sm text-slate-400">
+          <div className="flex flex-1 items-center justify-center text-sm text-default-400">
             Select an email to read
           </div>
         )}

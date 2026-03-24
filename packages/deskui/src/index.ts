@@ -44,6 +44,7 @@ export type { OSTheme } from './themes/types'
 
 // Themes
 export { defaultTheme } from './themes/default'
+export { defaultDarkTheme } from './themes/default-dark'
 
 // Utilities
 export { mergeTheme } from './utils/mergeTheme'

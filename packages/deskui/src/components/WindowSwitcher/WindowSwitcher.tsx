@@ -134,7 +134,7 @@ export function WindowSwitcher() {
                   <span
                     style={{
                       fontSize: 11,
-                      color: cp.itemColor,
+                      color: isSelected ? '#ffffff' : cp.itemColor,
                       maxWidth: 80,
                       overflow: 'hidden',
                       textOverflow: 'ellipsis',

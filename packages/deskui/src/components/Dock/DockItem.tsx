@@ -18,6 +18,7 @@ export function DockItem({ app }: DockItemProps) {
   const focusWindow = useOSStore((s) => s.focusWindow)
   const minimizeWindow = useOSStore((s) => s.minimizeWindow)
   const restoreWindow = useOSStore((s) => s.restoreWindow)
+  const shakeWindow = useOSStore((s) => s.shakeWindow)
   const bounceControls = useAnimation()
   const prevWindowCountRef = useRef(0)
   const [hovered, setHovered] = useState(false)
@@ -45,7 +46,15 @@ export function DockItem({ app }: DockItemProps) {
     } else if (minimizedWindow) {
       restoreWindow(minimizedWindow.id)
     } else if (focusedWindow) {
-      minimizeWindow(focusedWindow.id)
+      // If other windows of this app exist behind it, shake to reveal
+      const otherWindows = appWindows.filter(
+        (w) => w.id !== focusedWindow.id && w.status !== 'minimized',
+      )
+      if (otherWindows.length > 0) {
+        shakeWindow(focusedWindow.id)
+      } else {
+        minimizeWindow(focusedWindow.id)
+      }
     } else {
       focusWindow(appWindows[0].id)
     }
@@ -60,6 +69,7 @@ export function DockItem({ app }: DockItemProps) {
     focusWindow,
     minimizeWindow,
     restoreWindow,
+    shakeWindow,
   ])
 
   const badge = useOSStore((s) => s.badges[app.id] ?? 0)

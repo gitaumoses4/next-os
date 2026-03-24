@@ -62,21 +62,21 @@ export default function Calendar() {
   const days = Array.from({ length: daysInMonth }, (_, i) => i + 1)
 
   return (
-    <div className="flex h-screen bg-slate-50/50">
+    <div className="flex h-screen bg-default-50">
       {/* Calendar grid */}
       <div className="flex flex-1 flex-col p-6">
         <div className="mb-4">
-          <h1 className="text-2xl font-bold text-slate-900">
+          <h1 className="text-2xl font-bold text-foreground">
             {monthNames[currentMonth]} {currentYear}
           </h1>
         </div>
 
-        <Card className="flex-1 border border-slate-200 shadow-sm">
+        <Card className="flex-1 border border-divider shadow-sm">
           <CardBody className="p-0">
             {/* Day headers */}
-            <div className="grid grid-cols-7 border-b border-slate-200">
+            <div className="grid grid-cols-7 border-b border-divider">
               {dayNames.map((d) => (
-                <div key={d} className="py-2 text-center text-xs font-medium text-slate-500">
+                <div key={d} className="py-2 text-center text-xs font-medium text-default-500">
                   {d}
                 </div>
               ))}
@@ -87,7 +87,7 @@ export default function Calendar() {
               {blanks.map((b) => (
                 <div
                   key={`blank-${b}`}
-                  className="min-h-[80px] border-b border-r border-slate-100"
+                  className="min-h-[80px] border-b border-r border-divider/50"
                 />
               ))}
               {days.map((day) => {
@@ -99,13 +99,15 @@ export default function Calendar() {
                   <button
                     key={day}
                     onClick={() => setSelectedDay(day)}
-                    className={`min-h-[80px] border-b border-r border-slate-100 p-1.5 text-left transition-colors ${
-                      isSelected ? 'bg-primary-50' : 'hover:bg-slate-50'
+                    className={`min-h-[80px] border-b border-r border-divider/50 p-1.5 text-left transition-colors ${
+                      isSelected ? 'bg-primary-50' : 'hover:bg-default-50'
                     }`}
                   >
                     <span
                       className={`inline-flex h-6 w-6 items-center justify-center rounded-full text-xs ${
-                        isToday ? 'bg-primary font-bold text-white' : 'font-medium text-slate-700'
+                        isToday
+                          ? 'bg-primary font-bold text-white'
+                          : 'font-medium text-foreground/80'
                       }`}
                     >
                       {day}
@@ -120,7 +122,7 @@ export default function Calendar() {
                         </div>
                       ))}
                       {dayEvents.length > 2 && (
-                        <span className="text-[10px] text-slate-400">
+                        <span className="text-[10px] text-default-400">
                           +{dayEvents.length - 2} more
                         </span>
                       )}
@@ -134,8 +136,8 @@ export default function Calendar() {
       </div>
 
       {/* Sidebar */}
-      <div className="w-64 shrink-0 border-l border-slate-200 bg-white p-4">
-        <h3 className="mb-3 text-sm font-semibold text-slate-900">Upcoming</h3>
+      <div className="w-64 shrink-0 border-l border-divider bg-content1 p-4">
+        <h3 className="mb-3 text-sm font-semibold text-foreground">Upcoming</h3>
         <div className="flex flex-col gap-3">
           {upcomingEvents.map((ev, i) => (
             <div key={i} className="flex items-start gap-2.5">
@@ -145,8 +147,8 @@ export default function Calendar() {
                 className={`${ev.color} shrink-0 text-[10px] text-white`}
               />
               <div>
-                <p className="text-sm font-medium text-slate-800">{ev.title}</p>
-                <p className="text-xs text-slate-400">{ev.time}</p>
+                <p className="text-sm font-medium text-foreground/90">{ev.title}</p>
+                <p className="text-xs text-default-400">{ev.time}</p>
               </div>
             </div>
           ))}

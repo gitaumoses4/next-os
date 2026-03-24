@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef, useCallback } from 'react'
 import { useOSContext } from '@/context/OSContext'
 
 interface WindowContentProps {
@@ -8,10 +8,26 @@ interface WindowContentProps {
   skeleton?: React.ReactNode
 }
 
+function buildIframeSrc(route: string, colorScheme: 'light' | 'dark'): string {
+  const separator = route.includes('?') ? '&' : '?'
+  return `${route}${separator}_deskui_colorScheme=${colorScheme}`
+}
+
 export function WindowContent({ route, skeleton }: WindowContentProps) {
   const { theme } = useOSContext()
   const [loaded, setLoaded] = useState(false)
+  const iframeRef = useRef<HTMLIFrameElement>(null)
   const { contentBg, loadingSpinnerColor } = theme.windowChrome
+  const { colorScheme } = theme
+
+  const onLoad = useCallback(() => {
+    setLoaded(true)
+    // Notify the iframe of the color scheme
+    iframeRef.current?.contentWindow?.postMessage(
+      { __deskui: true, type: 'colorScheme', colorScheme },
+      '*',
+    )
+  }, [colorScheme])
 
   return (
     <div style={{ flex: 1, position: 'relative', overflow: 'hidden' }}>
@@ -28,7 +44,6 @@ export function WindowContent({ route, skeleton }: WindowContentProps) {
               gap: 16,
             }}
           >
-            {/* Skeleton blocks */}
             <div
               style={{
                 width: '40%',
@@ -75,13 +90,15 @@ export function WindowContent({ route, skeleton }: WindowContentProps) {
           </div>
         ))}
       <iframe
-        src={route}
-        onLoad={() => setLoaded(true)}
+        ref={iframeRef}
+        src={buildIframeSrc(route, colorScheme)}
+        onLoad={onLoad}
         style={{
           width: '100%',
           height: '100%',
           border: 'none',
           opacity: loaded ? 1 : 0,
+          colorScheme,
         }}
         sandbox="allow-same-origin allow-scripts allow-forms allow-popups"
         loading="lazy"

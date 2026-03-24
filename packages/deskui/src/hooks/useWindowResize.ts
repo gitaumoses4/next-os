@@ -21,6 +21,8 @@ export function useWindowResize(windowId: string, handle: Handle) {
   const windows = useOSStore((s) => s.windows)
   const { apps } = useOSContext()
   const startRef = useRef<StartState | null>(null)
+  const rafRef = useRef<number | null>(null)
+  const pendingRef = useRef<{ x: number; y: number; w: number; h: number } | null>(null)
 
   const win = windows[windowId]
   const app = apps.find((a) => a.id === win?.appId)
@@ -28,6 +30,16 @@ export function useWindowResize(windowId: string, handle: Handle) {
   const minH = app?.minSize?.h ?? 150
   const maxW = app?.maxSize?.w ?? Infinity
   const maxH = app?.maxSize?.h ?? Infinity
+
+  const flush = useCallback(() => {
+    const p = pendingRef.current
+    if (p) {
+      resizeWindow(windowId, { w: p.w, h: p.h })
+      moveWindow(windowId, { x: p.x, y: p.y })
+      pendingRef.current = null
+    }
+    rafRef.current = null
+  }, [windowId, resizeWindow, moveWindow])
 
   const onPointerDown = useCallback(
     (e: React.PointerEvent) => {
@@ -64,41 +76,52 @@ export function useWindowResize(windowId: string, handle: Handle) {
       let newX = s.winX
       let newY = s.winY
 
-      // East
       if (handle.includes('e')) {
         newW = Math.min(maxW, Math.max(minW, s.winW + dx))
       }
-      // West
       if (handle.includes('w')) {
         const proposedW = Math.min(maxW, Math.max(minW, s.winW - dx))
         newX = s.winX + (s.winW - proposedW)
         newW = proposedW
       }
-      // South
       if (handle === 's' || handle === 'se' || handle === 'sw') {
         newH = Math.min(maxH, Math.max(minH, s.winH + dy))
       }
-      // North
       if (handle === 'n' || handle === 'ne' || handle === 'nw') {
         const proposedH = Math.min(maxH, Math.max(minH, s.winH - dy))
         newY = s.winY + (s.winH - proposedH)
         newH = proposedH
       }
 
-      resizeWindow(windowId, { w: newW, h: newH })
-      if (newX !== s.winX || newY !== s.winY) {
-        moveWindow(windowId, { x: newX, y: newY })
+      pendingRef.current = { x: newX, y: newY, w: newW, h: newH }
+      if (!rafRef.current) {
+        rafRef.current = requestAnimationFrame(flush)
       }
     },
-    [windowId, handle, minW, minH, maxW, maxH, resizeWindow, moveWindow],
+    [handle, minW, minH, maxW, maxH, flush],
   )
 
-  const onPointerUp = useCallback((e: React.PointerEvent) => {
-    if ((e.target as HTMLElement).hasPointerCapture(e.pointerId)) {
-      ;(e.target as HTMLElement).releasePointerCapture(e.pointerId)
-    }
-    startRef.current = null
-  }, [])
+  const onPointerUp = useCallback(
+    (e: React.PointerEvent) => {
+      if ((e.target as HTMLElement).hasPointerCapture(e.pointerId)) {
+        ;(e.target as HTMLElement).releasePointerCapture(e.pointerId)
+      }
+
+      // Flush final position
+      if (rafRef.current) {
+        cancelAnimationFrame(rafRef.current)
+        rafRef.current = null
+      }
+      if (pendingRef.current) {
+        const p = pendingRef.current
+        resizeWindow(windowId, { w: p.w, h: p.h })
+        moveWindow(windowId, { x: p.x, y: p.y })
+        pendingRef.current = null
+      }
+      startRef.current = null
+    },
+    [windowId, resizeWindow, moveWindow],
+  )
 
   return {
     resizeProps: {
