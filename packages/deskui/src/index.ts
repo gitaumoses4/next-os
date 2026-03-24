@@ -26,6 +26,7 @@ export { useGlassStyle } from './hooks/useGlassStyle'
 export { useMiddleware } from './hooks/useMiddleware'
 export { useHighContrast } from './hooks/useHighContrast'
 export { useUrlSync } from './hooks/useUrlSync'
+export { useColorScheme } from './hooks/useColorScheme'
 
 // Context
 export { useOSContext } from './context/OSContext'
