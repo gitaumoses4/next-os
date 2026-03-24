@@ -55,6 +55,7 @@ export interface DesktopTheme {
   gridGap: number
   gridPadding: string
   defaultWallpaper: string
+  borderRadius: number
 }
 
 export interface CommandPaletteTheme {

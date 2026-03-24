@@ -15,7 +15,7 @@ interface DesktopIconProps {
 export function DesktopIcon({ app, isSelected, onSelect }: DesktopIconProps) {
   const { theme, apps } = useOSContext()
   const openWindow = useOSStore((s) => s.openWindow)
-  const { iconSize, iconLabelColor, iconLabelShadow, iconSelectedBg } = theme.desktop
+  const { iconSize, iconLabelColor, iconLabelShadow, iconSelectedBg, borderRadius } = theme.desktop
 
   const onDoubleClick = useCallback(() => {
     openWindow(app.id, apps)
@@ -33,12 +33,12 @@ export function DesktopIcon({ app, isSelected, onSelect }: DesktopIconProps) {
         padding: 8,
         border: 'none',
         background: isSelected ? iconSelectedBg : 'transparent',
-        borderRadius: 0,
+        borderRadius,
         cursor: 'pointer',
         width: iconSize + 32,
       }}
     >
-      <AppIcon icon={app.icon} size={iconSize} />
+      <AppIcon icon={app.icon} size={iconSize} borderRadius={borderRadius ?? 0} />
       <span
         style={{
           fontSize: 11,
