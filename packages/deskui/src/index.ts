@@ -23,6 +23,7 @@ export { useDesktop } from './hooks/useDesktop'
 export { useWindowEvents } from './hooks/useWindowEvents'
 export { useOSEvents } from './hooks/useOSEvents'
 export { useGlassStyle } from './hooks/useGlassStyle'
+export { useMiddleware } from './hooks/useMiddleware'
 
 // Context
 export { useOSContext } from './context/OSContext'
@@ -50,3 +51,5 @@ export { defaultDarkTheme } from './themes/default-dark'
 export { mergeTheme } from './utils/mergeTheme'
 export { deskuiEvents } from './utils/eventEmitter'
 export type { DeskuiEvent } from './utils/eventEmitter'
+export { deskuiMiddleware } from './utils/middleware'
+export type { MiddlewareAction, MiddlewareFn } from './utils/middleware'

@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import { v4 as uuid } from 'uuid'
 import type { AppDefinition } from '@/types'
+import { deskuiMiddleware } from '@/utils/middleware'
 
 export interface WindowState {
   id: string
@@ -188,6 +189,12 @@ export const useOSStore = create<OSStore>((set, get) => ({
   },
 
   openWindow: (appId, apps) => {
+    let allowed = false
+    deskuiMiddleware.run({ type: 'openWindow', appId }, () => {
+      allowed = true
+    })
+    if (!allowed) return null
+
     const app = apps.find((a) => a.id === appId)
     if (!app) return null
 
@@ -242,6 +249,12 @@ export const useOSStore = create<OSStore>((set, get) => ({
   },
 
   closeWindow: (windowId) => {
+    let allowed = false
+    deskuiMiddleware.run({ type: 'closeWindow', windowId }, () => {
+      allowed = true
+    })
+    if (!allowed) return
+
     const state = get()
     if (!state.windows[windowId]) return
 
