@@ -16,6 +16,7 @@ export function Window({ windowId }: WindowProps) {
   const win = useOSStore((s) => s.windows[windowId])
   const focusWindow = useOSStore((s) => s.focusWindow)
   const isDragging = useOSStore((s) => s.draggingWindowId === windowId)
+  const isShaking = useOSStore((s) => s.shakeWindowId === windowId)
   const prefersReducedMotion = useReducedMotion()
 
   if (!win) return null
@@ -87,6 +88,7 @@ export function Window({ windowId }: WindowProps) {
         WebkitBackdropFilter: windowChrome.glassBlur,
         filter: isFocused ? 'none' : windowChrome.unfocusedFilter,
         transition: 'filter 0.2s ease, box-shadow 0.25s ease',
+        animation: isShaking ? 'nos-shake 0.4s ease' : undefined,
       }}
     >
       {!isPip && <WindowTitlebar windowId={windowId} app={app} />}
