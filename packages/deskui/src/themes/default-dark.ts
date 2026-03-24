@@ -2,6 +2,7 @@ import type { OSTheme } from './types'
 
 export const defaultDarkTheme: OSTheme = {
   name: 'deskui-dark',
+  colorScheme: 'dark',
 
   windowChrome: {
     borderRadius: '10px',

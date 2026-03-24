@@ -132,6 +132,7 @@ export interface AnimationTheme {
 
 export interface OSTheme {
   name: string
+  colorScheme: 'light' | 'dark'
   windowChrome: WindowChromeTheme
   dock: DockTheme
   taskbar: TaskbarTheme

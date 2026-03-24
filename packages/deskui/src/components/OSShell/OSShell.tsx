@@ -173,6 +173,7 @@ export function OSShell({
         inset: 0,
         overflow: 'hidden',
         fontFamily: theme.tokens['font-family'] ?? 'system-ui, sans-serif',
+        colorScheme: theme.colorScheme,
         ...cssVars,
       }}
     >
