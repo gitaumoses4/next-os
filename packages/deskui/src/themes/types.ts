@@ -98,6 +98,20 @@ export interface ContextMenuTheme {
   dangerHoverBg: string
 }
 
+export interface NotificationTheme {
+  bg: string
+  blur: string
+  border: string
+  shadow: string
+  borderRadius: string
+  titleColor: string
+  bodyColor: string
+  timeColor: string
+  actionColor: string
+  panelBg: string
+  panelWidth: number
+}
+
 export interface AnimationTheme {
   windowOpen: Variants
   windowClose: Variants
@@ -113,6 +127,7 @@ export interface OSTheme {
   desktop: DesktopTheme
   commandPalette: CommandPaletteTheme
   contextMenu: ContextMenuTheme
+  notification: NotificationTheme
   modeToggle: ModeToggleTheme
   animation: AnimationTheme
   tokens: Record<string, string>

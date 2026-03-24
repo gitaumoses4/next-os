@@ -92,6 +92,20 @@ export const defaultTheme: OSTheme = {
     dangerHoverBg: 'rgba(255, 95, 87, 0.15)',
   },
 
+  notification: {
+    bg: 'rgba(30, 30, 30, 0.92)',
+    blur: 'blur(20px)',
+    border: '1px solid rgba(255, 255, 255, 0.1)',
+    shadow: '0 8px 30px rgba(0, 0, 0, 0.3)',
+    borderRadius: '12px',
+    titleColor: '#ffffff',
+    bodyColor: 'rgba(255, 255, 255, 0.7)',
+    timeColor: 'rgba(255, 255, 255, 0.3)',
+    actionColor: '#6366f1',
+    panelBg: 'rgba(20, 20, 20, 0.95)',
+    panelWidth: 360,
+  },
+
   modeToggle: {
     bg: 'rgba(0, 0, 0, 0.7)',
     blur: 'blur(12px)',

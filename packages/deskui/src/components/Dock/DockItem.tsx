@@ -1,7 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { motion, useAnimation, useReducedMotion } from 'framer-motion'
+import { motion, useAnimation, useReducedMotion, AnimatePresence } from 'framer-motion'
 import { useOSStore } from '@/store/windowStore'
 import { useOSContext } from '@/context/OSContext'
 import { AppIcon } from '@/components/shared/AppIcon'
@@ -125,27 +125,33 @@ export function DockItem({ app }: DockItemProps) {
       </motion.button>
 
       {/* Tooltip */}
-      {hovered && (
-        <div
-          style={{
-            position: 'absolute',
-            bottom: '100%',
-            left: '50%',
-            transform: 'translateX(-50%)',
-            marginBottom: 6,
-            padding: '4px 10px',
-            background: theme.dock.tooltipBg,
-            color: theme.dock.tooltipColor,
-            fontSize: 12,
-            fontWeight: 500,
-            borderRadius: 4,
-            whiteSpace: 'nowrap',
-            pointerEvents: 'none',
-          }}
-        >
-          {app.label}
-        </div>
-      )}
+      <AnimatePresence>
+        {hovered && (
+          <motion.div
+            initial={{ opacity: 0, y: 4 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 4 }}
+            transition={{ duration: 0.12 }}
+            style={{
+              position: 'absolute',
+              bottom: '100%',
+              left: '50%',
+              transform: 'translateX(-50%)',
+              marginBottom: 6,
+              padding: '4px 10px',
+              background: theme.dock.tooltipBg,
+              color: theme.dock.tooltipColor,
+              fontSize: 12,
+              fontWeight: 500,
+              borderRadius: 4,
+              whiteSpace: 'nowrap',
+              pointerEvents: 'none',
+            }}
+          >
+            {app.label}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }

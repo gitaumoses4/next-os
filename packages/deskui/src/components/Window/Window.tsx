@@ -73,13 +73,15 @@ export function Window({ windowId }: WindowProps) {
         display: win.status === 'minimized' ? 'none' : 'flex',
         flexDirection: 'column',
         overflow: 'hidden',
-        boxShadow: isFocused ? windowChrome.shadowFocused : windowChrome.shadow,
+        boxShadow: isFocused
+          ? `${windowChrome.shadowFocused}, 0 0 0 1px ${theme.tokens['accent-color'] ?? 'rgba(99, 102, 241, 0.3)'}`
+          : windowChrome.shadow,
         border: windowChrome.border,
         background: windowChrome.glassBg,
         backdropFilter: windowChrome.glassBlur,
         WebkitBackdropFilter: windowChrome.glassBlur,
         filter: isFocused ? 'none' : windowChrome.unfocusedFilter,
-        transition: 'filter 0.2s ease, box-shadow 0.2s ease',
+        transition: 'filter 0.2s ease, box-shadow 0.25s ease',
       }}
     >
       <WindowTitlebar windowId={windowId} />

@@ -19,6 +19,7 @@ import { SnapPreview } from '@/components/SnapPreview'
 import { WindowSwitcher } from '@/components/WindowSwitcher'
 import { useBridgeListener } from '@/hooks/useBridgeListener'
 import { usePersistedLayout } from '@/hooks/usePersistedLayout'
+import { ToastContainer, NotificationPanel } from '@/components/Notification'
 import '@/styles.css'
 
 const STORAGE_KEY = 'deskui-mode'
@@ -177,6 +178,8 @@ export function OSShell({
         <WindowSwitcher />
         <ModeToggle mode={mode} onToggle={toggleMode} themeTokens={theme.modeToggle} />
         <CommandPalette open={commandPaletteOpen} onClose={() => setCommandPaletteOpen(false)} />
+        <ToastContainer />
+        <NotificationPanel />
         {children}
       </OSProvider>
     </div>
