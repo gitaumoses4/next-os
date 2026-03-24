@@ -23,6 +23,7 @@ import { ToastContainer, NotificationPanel } from '@/components/Notification'
 import { MissionControl } from '@/components/MissionControl'
 import { MenuBar } from '@/components/MenuBar'
 import { useFocusTrap } from '@/hooks/useFocusTrap'
+import { useUrlSync } from '@/hooks/useUrlSync'
 import { LockScreen } from '@/components/LockScreen'
 import '@/styles.css'
 
@@ -38,6 +39,7 @@ export interface OSShellProps {
   defaultMode?: 'desktop' | 'web'
   persistLayout?: boolean
   lockScreen?: boolean | { idleTimeout: number }
+  syncWithUrl?: boolean | 'read' | 'read-write'
   onWindowOpen?: (appId: string) => void
   onWindowClose?: (windowId: string) => void
   onWindowFocus?: (windowId: string) => void
@@ -75,6 +77,7 @@ export function OSShell({
   defaultMode = 'desktop',
   persistLayout = false,
   lockScreen = false,
+  syncWithUrl = false,
   onWindowOpen,
   onWindowClose,
   onWindowFocus,
@@ -143,6 +146,7 @@ export function OSShell({
   // Listen for postMessage from iframe windows
   useBridgeListener()
   useFocusTrap()
+  useUrlSync({ apps, enabled: syncWithUrl })
   usePersistedLayout(persistLayout)
 
   // Still detecting context — render nothing to prevent flash
