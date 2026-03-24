@@ -31,11 +31,14 @@ export type SnapZone =
 export interface OSStore {
   windows: Record<string, WindowState>
   zStack: string[]
+  badges: Record<string, number>
   showDesktopSnapshot: string[] | null
   draggingWindowId: string | null
   snapPreview: SnapZone
   setDragging: (windowId: string | null) => void
   setSnapPreview: (zone: SnapZone) => void
+  setBadge: (appId: string, count: number) => void
+  setWindowTitle: (windowId: string, title: string) => void
   snapWindow: (
     windowId: string,
     zone: Exclude<SnapZone, null>,
@@ -84,11 +87,19 @@ const CASCADE_OFFSET = 30
 export const useOSStore = create<OSStore>((set, get) => ({
   windows: {},
   zStack: [],
+  badges: {},
   showDesktopSnapshot: null,
   draggingWindowId: null,
   snapPreview: null,
   setDragging: (windowId) => set({ draggingWindowId: windowId }),
   setSnapPreview: (zone) => set({ snapPreview: zone }),
+  setBadge: (appId, count) => set((state) => ({ badges: { ...state.badges, [appId]: count } })),
+  setWindowTitle: (windowId, title) => {
+    const state = get()
+    const win = state.windows[windowId]
+    if (!win) return
+    set({ windows: { ...state.windows, [windowId]: { ...win, title } } })
+  },
   snapWindow: (windowId, zone, barHeight, barPosition = 'bottom') => {
     const state = get()
     const win = state.windows[windowId]

@@ -30,6 +30,7 @@ export function Window({ windowId }: WindowProps) {
 
   return (
     <motion.div
+      data-window-id={windowId}
       variants={{
         ...theme.animation.windowOpen,
         ...theme.animation.windowClose,
@@ -79,7 +80,7 @@ export function Window({ windowId }: WindowProps) {
       }}
     >
       <WindowTitlebar windowId={windowId} />
-      <WindowContent route={app.route} />
+      <WindowContent route={app.route} skeleton={app.skeleton} />
       {/* Transparent overlay to capture clicks when unfocused (iframe swallows pointer events) */}
       {!isFocused && (
         <div

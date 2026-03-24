@@ -33,6 +33,8 @@ export interface DockTheme {
   hoverBg: string
   tooltipBg: string
   tooltipColor: string
+  badgeBg: string
+  badgeColor: string
 }
 
 export interface TaskbarTheme {

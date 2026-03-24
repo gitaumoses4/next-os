@@ -4,6 +4,16 @@
   }
 }
 
+@keyframes nos-pulse {
+  0%,
+  100% {
+    opacity: 0.1;
+  }
+  50% {
+    opacity: 0.2;
+  }
+}
+
 .nos-sq-btn:hover {
   background: rgba(0, 0, 0, 0.08) !important;
 }
