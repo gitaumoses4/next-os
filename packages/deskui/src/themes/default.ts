@@ -107,6 +107,16 @@ export const defaultTheme: OSTheme = {
     panelWidth: 360,
   },
 
+  menuBar: {
+    height: 28,
+    bg: 'rgba(236, 236, 236, 0.82)',
+    blur: 'blur(24px)',
+    textColor: '#1d1d1f',
+    activeTextColor: '#ffffff',
+    activeItemBg: 'rgba(0, 122, 255, 0.8)',
+    border: '1px solid rgba(0, 0, 0, 0.06)',
+  },
+
   modeToggle: {
     bg: 'rgba(0, 0, 0, 0.55)',
     blur: 'blur(20px)',

@@ -19,6 +19,7 @@ export { useWindowDrag } from './hooks/useWindowDrag'
 export { useWindowResize } from './hooks/useWindowResize'
 export { useDeskuiBridge } from './hooks/useDeskuiBridge'
 export { useNotification } from './hooks/useNotification'
+export { useDesktop } from './hooks/useDesktop'
 
 // Context
 export { useOSContext } from './context/OSContext'

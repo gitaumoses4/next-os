@@ -21,6 +21,7 @@ import { useBridgeListener } from '@/hooks/useBridgeListener'
 import { usePersistedLayout } from '@/hooks/usePersistedLayout'
 import { ToastContainer, NotificationPanel } from '@/components/Notification'
 import { MissionControl } from '@/components/MissionControl'
+import { MenuBar } from '@/components/MenuBar'
 import '@/styles.css'
 
 const STORAGE_KEY = 'deskui-mode'
@@ -122,10 +123,11 @@ export function OSShell({
   const cssVars = useMemo(() => themeToVars(theme), [theme])
 
   // Window management shortcuts: Ctrl/Cmd+W, M, Tab, K, etc.
+  // Dock mode: menu bar at top. Taskbar mode: taskbar at top/bottom.
   const reservedSpace =
     taskbarVariant === 'taskbar'
       ? { height: theme.taskbar.height, position: theme.taskbar.position }
-      : undefined
+      : { height: theme.menuBar.height, position: 'top' as const }
   useKeyboardShortcuts({
     apps,
     reservedSpace,
@@ -182,6 +184,9 @@ export function OSShell({
         <Desktop />
         <SnapPreview />
         <WindowManager />
+        {taskbarVariant === 'dock' && (
+          <MenuBar onToggleCommandPalette={() => setCommandPaletteOpen((v) => !v)} />
+        )}
         {taskbarVariant === 'dock' ? <Dock /> : <Taskbar />}
         <WindowSwitcher />
         <ModeToggle mode={mode} onToggle={toggleMode} themeTokens={theme.modeToggle} />

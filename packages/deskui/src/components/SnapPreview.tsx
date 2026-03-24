@@ -10,9 +10,9 @@ export function SnapPreview() {
 
   if (!snapPreview) return null
 
-  // Dock auto-hides — no reserved space. Taskbar is always visible.
-  const barHeight = taskbarVariant === 'taskbar' ? theme.taskbar.height : 0
-  const barPosition = taskbarVariant === 'taskbar' ? theme.taskbar.position : 'bottom'
+  // Dock mode: menu bar at top. Taskbar mode: taskbar at top/bottom.
+  const barHeight = taskbarVariant === 'taskbar' ? theme.taskbar.height : theme.menuBar.height
+  const barPosition = taskbarVariant === 'taskbar' ? theme.taskbar.position : 'top'
   const topOffset = barPosition === 'top' ? barHeight : 0
 
   const vw = window.innerWidth

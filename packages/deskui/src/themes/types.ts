@@ -113,6 +113,16 @@ export interface NotificationTheme {
   panelWidth: number
 }
 
+export interface MenuBarTheme {
+  height: number
+  bg: string
+  blur: string
+  textColor: string
+  activeTextColor: string
+  activeItemBg: string
+  border: string
+}
+
 export interface AnimationTheme {
   windowOpen: Variants
   windowClose: Variants
@@ -129,6 +139,7 @@ export interface OSTheme {
   commandPalette: CommandPaletteTheme
   contextMenu: ContextMenuTheme
   notification: NotificationTheme
+  menuBar: MenuBarTheme
   modeToggle: ModeToggleTheme
   animation: AnimationTheme
   tokens: Record<string, string>
