@@ -8,19 +8,21 @@ import { useReservedSpace } from '@/hooks/useReservedSpace'
 import { WindowControls } from './WindowControls'
 import { ContextMenu } from '@/components/ContextMenu'
 import type { ContextMenuItem } from '@/components/ContextMenu'
+import type { AppDefinition } from '@/types'
 
 interface WindowTitlebarProps {
   windowId: string
+  app: AppDefinition
 }
 
-export function WindowTitlebar({ windowId }: WindowTitlebarProps) {
-  const { theme, taskbarVariant } = useOSContext()
+export function WindowTitlebar({ windowId, app }: WindowTitlebarProps) {
+  const { theme } = useOSContext()
   const { dragProps } = useWindowDrag(windowId)
   const win = useOSStore((s) => s.windows[windowId])
   const maximizeWindow = useOSStore((s) => s.maximizeWindow)
   const restoreWindow = useOSStore((s) => s.restoreWindow)
   const minimizeWindow = useOSStore((s) => s.minimizeWindow)
-  const closeWindow = useOSStore((s) => s.closeWindow)
+  const requestClose = useOSStore((s) => s.requestClose)
   const moveWindow = useOSStore((s) => s.moveWindow)
   const [contextMenuPos, setContextMenuPos] = useState<{ x: number; y: number } | null>(null)
 
@@ -31,13 +33,18 @@ export function WindowTitlebar({ windowId }: WindowTitlebarProps) {
   const isMaximized = win?.status === 'maximized'
   const reservedSpace = useReservedSpace()
 
+  const onClose = useCallback(() => requestClose(windowId), [requestClose, windowId])
+  const onMinimize = useCallback(() => minimizeWindow(windowId), [minimizeWindow, windowId])
+  const onMaximize = useCallback(
+    () => maximizeWindow(windowId, reservedSpace),
+    [maximizeWindow, windowId, reservedSpace],
+  )
+  const onRestore = useCallback(() => restoreWindow(windowId), [restoreWindow, windowId])
+
   const onDoubleClick = useCallback(() => {
-    if (isMaximized) {
-      restoreWindow(windowId)
-    } else {
-      maximizeWindow(windowId, reservedSpace)
-    }
-  }, [isMaximized, windowId, maximizeWindow, restoreWindow, reservedSpace])
+    if (isMaximized) onRestore()
+    else onMaximize()
+  }, [isMaximized, onMaximize, onRestore])
 
   const onContextMenu = useCallback((e: React.MouseEvent) => {
     e.preventDefault()
@@ -48,14 +55,9 @@ export function WindowTitlebar({ windowId }: WindowTitlebarProps) {
     {
       label: isMaximized ? 'Restore' : 'Maximize',
       shortcut: '⌘⇧F',
-      action: () =>
-        isMaximized ? restoreWindow(windowId) : maximizeWindow(windowId, reservedSpace),
+      action: () => (isMaximized ? onRestore() : onMaximize()),
     },
-    {
-      label: 'Minimize',
-      shortcut: '⌘M',
-      action: () => minimizeWindow(windowId),
-    },
+    { label: 'Minimize', shortcut: '⌘M', action: onMinimize },
     {
       label: 'Move to Center',
       action: () => {
@@ -68,13 +70,27 @@ export function WindowTitlebar({ windowId }: WindowTitlebarProps) {
       },
     },
     { separator: true, label: '' },
-    {
-      label: 'Close',
-      shortcut: '⌘W',
-      danger: true,
-      action: () => closeWindow(windowId),
-    },
+    { label: 'Close', shortcut: '⌘W', danger: true, action: onClose },
   ]
+
+  // Custom titlebar render prop
+  if (app.renderTitlebar) {
+    return (
+      <>
+        {app.renderTitlebar({
+          windowId,
+          title: win?.title ?? '',
+          isFocused,
+          isMaximized,
+          onClose,
+          onMinimize,
+          onMaximize,
+          onRestore,
+          dragProps,
+        })}
+      </>
+    )
+  }
 
   return (
     <div
@@ -96,7 +112,7 @@ export function WindowTitlebar({ windowId }: WindowTitlebarProps) {
         flexShrink: 0,
       }}
     >
-      <WindowControls windowId={windowId} />
+      <WindowControls windowId={windowId} app={app} />
       <span
         style={{
           flex: 1,

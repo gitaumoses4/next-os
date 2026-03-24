@@ -11,6 +11,31 @@ export interface AppDefinition {
   instanceable?: boolean
   titlebarTitle?: string
   skeleton?: React.ReactNode
+  beforeClose?: () => boolean | Promise<boolean>
+  renderTitlebar?: (props: TitlebarRenderProps) => React.ReactNode
+  renderControls?: (props: ControlsRenderProps) => React.ReactNode
+}
+
+export interface TitlebarRenderProps {
+  windowId: string
+  title: string
+  isFocused: boolean
+  isMaximized: boolean
+  onClose: () => void
+  onMinimize: () => void
+  onMaximize: () => void
+  onRestore: () => void
+  dragProps: Record<string, unknown>
+}
+
+export interface ControlsRenderProps {
+  windowId: string
+  isFocused: boolean
+  isMaximized: boolean
+  onClose: () => void
+  onMinimize: () => void
+  onMaximize: () => void
+  onRestore: () => void
 }
 
 export type DeepPartial<T> = {

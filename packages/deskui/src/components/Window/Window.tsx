@@ -88,7 +88,7 @@ export function Window({ windowId }: WindowProps) {
         transition: 'filter 0.2s ease, box-shadow 0.25s ease',
       }}
     >
-      <WindowTitlebar windowId={windowId} />
+      <WindowTitlebar windowId={windowId} app={app} />
       <WindowContent route={app.route} skeleton={app.skeleton} />
       {/* Transparent overlay to capture clicks when unfocused (iframe swallows pointer events) */}
       {!isFocused && (

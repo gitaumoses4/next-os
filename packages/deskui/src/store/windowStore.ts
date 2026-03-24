@@ -41,6 +41,10 @@ export interface OSStore {
   setSnapPreview: (zone: SnapZone) => void
   setBadge: (appId: string, count: number) => void
   setWindowTitle: (windowId: string, title: string) => void
+  beforeCloseHandlers: Record<string, () => boolean | Promise<boolean>>
+  registerBeforeClose: (appId: string, handler: () => boolean | Promise<boolean>) => void
+  unregisterBeforeClose: (appId: string) => void
+  requestClose: (windowId: string) => Promise<void>
   snapWindow: (
     windowId: string,
     zone: Exclude<SnapZone, null>,
@@ -99,6 +103,28 @@ export const useOSStore = create<OSStore>((set, get) => ({
   missionControlActive: false,
   toggleMissionControl: () =>
     set((state) => ({ missionControlActive: !state.missionControlActive })),
+  beforeCloseHandlers: {},
+  registerBeforeClose: (appId, handler) =>
+    set((state) => ({
+      beforeCloseHandlers: { ...state.beforeCloseHandlers, [appId]: handler },
+    })),
+  unregisterBeforeClose: (appId) =>
+    set((state) => {
+      const { [appId]: _, ...rest } = state.beforeCloseHandlers
+      return { beforeCloseHandlers: rest }
+    }),
+  requestClose: async (windowId) => {
+    const state = get()
+    const win = state.windows[windowId]
+    if (!win) return
+
+    const handler = state.beforeCloseHandlers[win.appId]
+    if (handler) {
+      const canClose = await handler()
+      if (!canClose) return
+    }
+    get().closeWindow(windowId)
+  },
   setDragging: (windowId) => set({ draggingWindowId: windowId }),
   setSnapPreview: (zone) => set({ snapPreview: zone }),
   setBadge: (appId, count) => set((state) => ({ badges: { ...state.badges, [appId]: count } })),
