@@ -1,20 +1,27 @@
 'use client'
 
-import { useState, useCallback, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { useOSContext } from '@/context/OSContext'
 import { useOSStore } from '@/store/windowStore'
 import { DockItem } from './DockItem'
+import type { AppDefinition, DockEntry } from '@/types'
 
 const HOVER_ZONE_SIZE = 8
 
-export function Dock() {
+interface DockProps {
+  dockItems?: DockEntry[]
+}
+
+export function Dock({ dockItems }: DockProps) {
   const { apps, theme } = useOSContext()
   const { height, bg, blur, borderRadius, padding, gap, position, border, autoHide } = theme.dock
   const windows = useOSStore((s) => s.windows)
   const [hovered, setHovered] = useState(false)
 
-  // Check if any visible window intersects with the dock area
+  // Use dockItems if provided, otherwise derive from apps
+  const items: DockEntry[] = dockItems ?? apps
+
   const hasIntersectingWindow = (() => {
     if (!autoHide) return false
     const dockTop = position === 'bottom' ? window.innerHeight - height - 16 : 0
@@ -24,14 +31,12 @@ export function Dock() {
       if (win.status === 'minimized') return false
       const winBottom = win.position.y + win.size.h
       const winTop = win.position.y
-      // Window overlaps the dock zone
       return winBottom > dockTop && winTop < dockBottom
     })
   })()
 
   const shouldHide = autoHide && hasIntersectingWindow && !hovered
 
-  // Edge hover zone to reveal dock when auto-hidden
   useEffect(() => {
     if (!autoHide) return
 
@@ -86,9 +91,22 @@ export function Dock() {
           border,
         }}
       >
-        {apps.map((app) => (
-          <DockItem key={app.id} app={app} />
-        ))}
+        {items.map((entry, i) =>
+          'type' in entry && entry.type === 'separator' ? (
+            <div
+              key={`sep-${i}`}
+              style={{
+                width: 1,
+                height: '60%',
+                background: theme.dock.runningIndicatorColor,
+                opacity: 0.4,
+                flexShrink: 0,
+              }}
+            />
+          ) : (
+            <DockItem key={(entry as AppDefinition).id} app={entry as AppDefinition} />
+          ),
+        )}
       </motion.div>
     </div>
   )

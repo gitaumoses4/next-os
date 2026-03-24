@@ -8,7 +8,7 @@ import { ContextMenu } from '@/components/ContextMenu'
 import type { ContextMenuItem } from '@/components/ContextMenu'
 
 export function Desktop() {
-  const { apps, theme, wallpaper } = useOSContext()
+  const { apps, theme, wallpaper, taskbarVariant } = useOSContext()
   const blurAll = useOSStore((s) => s.blurAll)
   const showDesktop = useOSStore((s) => s.showDesktop)
   const openWindow = useOSStore((s) => s.openWindow)
@@ -64,6 +64,8 @@ export function Desktop() {
         inset: 0,
         zIndex: 10,
         padding: gridPadding,
+        paddingTop:
+          taskbarVariant === 'dock' ? theme.menuBar.height + parseInt(gridPadding) : gridPadding,
         ...wallpaperStyle,
       }}
     >

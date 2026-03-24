@@ -21,6 +21,7 @@ export { useDeskuiBridge } from './hooks/useDeskuiBridge'
 export { useNotification } from './hooks/useNotification'
 export { useDesktop } from './hooks/useDesktop'
 export { useWindowEvents } from './hooks/useWindowEvents'
+export { useOSEvents } from './hooks/useOSEvents'
 
 // Context
 export { useOSContext } from './context/OSContext'
@@ -30,7 +31,14 @@ export { useOSStore } from './store/windowStore'
 export type { WindowState, OSStore } from './store/windowStore'
 
 // Types
-export type { AppDefinition, DeepPartial, TitlebarRenderProps, ControlsRenderProps } from './types'
+export type {
+  AppDefinition,
+  DeepPartial,
+  TitlebarRenderProps,
+  ControlsRenderProps,
+  DockSeparator,
+  DockEntry,
+} from './types'
 export type { OSTheme } from './themes/types'
 
 // Themes
@@ -38,3 +46,5 @@ export { defaultTheme } from './themes/default'
 
 // Utilities
 export { mergeTheme } from './utils/mergeTheme'
+export { deskuiEvents } from './utils/eventEmitter'
+export type { DeskuiEvent } from './utils/eventEmitter'

@@ -38,6 +38,12 @@ export interface ControlsRenderProps {
   onRestore: () => void
 }
 
+export interface DockSeparator {
+  type: 'separator'
+}
+
+export type DockEntry = AppDefinition | DockSeparator
+
 export type DeepPartial<T> = {
   [P in keyof T]?: T[P] extends object ? DeepPartial<T[P]> : T[P]
 }

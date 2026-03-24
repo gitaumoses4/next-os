@@ -1,7 +1,7 @@
 'use client'
 
 import { useMemo, useState, useEffect, useCallback } from 'react'
-import type { AppDefinition, DeepPartial } from '@/types'
+import type { AppDefinition, DeepPartial, DockEntry } from '@/types'
 import type { OSTheme } from '@/themes/types'
 import { defaultTheme } from '@/themes/default'
 import { mergeTheme } from '@/utils/mergeTheme'
@@ -22,6 +22,7 @@ import { usePersistedLayout } from '@/hooks/usePersistedLayout'
 import { ToastContainer, NotificationPanel } from '@/components/Notification'
 import { MissionControl } from '@/components/MissionControl'
 import { MenuBar } from '@/components/MenuBar'
+import { LockScreen } from '@/components/LockScreen'
 import '@/styles.css'
 
 const STORAGE_KEY = 'deskui-mode'
@@ -31,9 +32,11 @@ export interface OSShellProps {
   theme?: OSTheme | DeepPartial<OSTheme>
   wallpaper?: string
   taskbarVariant?: 'dock' | 'taskbar'
+  dockItems?: DockEntry[]
   initialWindows?: string[]
   defaultMode?: 'desktop' | 'web'
   persistLayout?: boolean
+  lockScreen?: boolean | { idleTimeout: number }
   onWindowOpen?: (appId: string) => void
   onWindowClose?: (windowId: string) => void
   onWindowFocus?: (windowId: string) => void
@@ -66,9 +69,11 @@ export function OSShell({
   theme: themeProp,
   wallpaper,
   taskbarVariant = 'dock',
+  dockItems,
   initialWindows,
   defaultMode = 'desktop',
   persistLayout = false,
+  lockScreen = false,
   onWindowOpen,
   onWindowClose,
   onWindowFocus,
@@ -187,13 +192,18 @@ export function OSShell({
         {taskbarVariant === 'dock' && (
           <MenuBar onToggleCommandPalette={() => setCommandPaletteOpen((v) => !v)} />
         )}
-        {taskbarVariant === 'dock' ? <Dock /> : <Taskbar />}
+        {taskbarVariant === 'dock' ? <Dock dockItems={dockItems} /> : <Taskbar />}
         <WindowSwitcher />
         <ModeToggle mode={mode} onToggle={toggleMode} themeTokens={theme.modeToggle} />
         <CommandPalette open={commandPaletteOpen} onClose={() => setCommandPaletteOpen(false)} />
         <MissionControl />
         <ToastContainer />
         <NotificationPanel />
+        {lockScreen && (
+          <LockScreen
+            idleTimeout={typeof lockScreen === 'object' ? lockScreen.idleTimeout : undefined}
+          />
+        )}
         {children}
       </OSProvider>
     </div>
