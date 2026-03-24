@@ -62,19 +62,22 @@ interface TrafficLightsProps {
 function TrafficLights({ position, onClose, onMinimize, onMaximize }: TrafficLightsProps) {
   const [hovered, setHovered] = useState(false)
 
+  const dotSize = 14
   const buttonStyle: React.CSSProperties = {
-    width: 12,
-    height: 12,
+    width: dotSize,
+    height: dotSize,
     borderRadius: '50%',
     border: 'none',
     cursor: 'pointer',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    fontSize: 8,
+    fontSize: 9,
     lineHeight: 1,
     color: 'transparent',
     padding: 0,
+    // Larger hit area via transparent outline
+    outline: '4px solid transparent',
   }
 
   return (
@@ -85,6 +88,7 @@ function TrafficLights({ position, onClose, onMinimize, onMaximize }: TrafficLig
         display: 'flex',
         alignItems: 'center',
         gap: 8,
+        padding: '0 2px',
         order: position === 'left' ? -1 : 1,
         [position === 'left' ? 'marginRight' : 'marginLeft']: 'auto',
       }}
