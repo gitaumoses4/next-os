@@ -80,6 +80,17 @@ export function Window({ windowId }: WindowProps) {
     >
       <WindowTitlebar windowId={windowId} />
       <WindowContent route={app.route} />
+      {/* Transparent overlay to capture clicks when unfocused (iframe swallows pointer events) */}
+      {!isFocused && (
+        <div
+          onPointerDown={() => focusWindow(windowId)}
+          style={{
+            position: 'absolute',
+            inset: 0,
+            zIndex: 1,
+          }}
+        />
+      )}
       {isResizable && <WindowResizeHandles windowId={windowId} />}
     </motion.div>
   )
